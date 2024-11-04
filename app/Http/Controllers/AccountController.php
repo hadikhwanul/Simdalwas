@@ -19,7 +19,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        return view('AccountCenter.index',[
+        return view('AccountCenter.index', [
             "judul" => "Account Center",
             "users" => User::latest()->paginate(4)->withQueryString()
 
@@ -31,9 +31,9 @@ class AccountController extends Controller
      */
     public function create()
     {
-        return view('AccountCenter.create',[
+        return view('AccountCenter.create', [
             "judul" => "Account Center",
-            "role" =>Jobdesk::all()
+            "role" => Jobdesk::all()
         ]);
     }
 
@@ -41,65 +41,67 @@ class AccountController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    // Validate the input data
-    $validatedData = $request->validate([
-        'nama' => 'required|string|max:255',
-        'username' => 'required|string|max:255|unique:users,username',
-        'NIP' => 'required|string|max:255|unique:users,NIP',
-        'no_hp' => 'required|string|max:15|unique:users,no_hp',
-        'no_wa' => 'required|string|max:15|unique:users,no_wa',
-        'kelompok' => 'required|string',
-        'jobdesk_id' => 'required|exists:jobdesks,id',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:4',
-        'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    ]);
+    {
+        // Validate the input data
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username',
+            'NIP' => 'required|string|max:255|unique:users,NIP',
+            'no_hp' => 'required|string|max:15|unique:users,no_hp',
+            'no_wa' => 'required|string|max:15|unique:users,no_wa',
+            'kelompok' => 'required|string',
+            'jobdesk_id' => 'required|exists:jobdesks,id',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:4',
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-    // Handle file upload if there is a profile image
-    if ($request->hasFile('profile')) {
+        // Handle no_hp and no_wa formatting
+        $validatedData['no_hp'] = str_replace('08', '628', $validatedData['no_hp']);
+        $validatedData['no_wa'] = str_replace('08', '628', $validatedData['no_wa']);
+
+        // Handle file upload if there is a profile image
+        if ($request->hasFile('profile')) {
+            try {
+                $profilePath = $request->file('profile')->store('profiles', 'public');
+                $validatedData['profile'] = $profilePath;
+            } catch (\Exception $e) {
+                Log::error('Profile image upload failed: ' . $e->getMessage());
+                return redirect()->back()->withInput()->withErrors(['error' => 'Profile image upload failed. Please try again.']);
+            }
+        }
+
+        // Hash the password before saving
+        $validatedData['password'] = bcrypt($validatedData['password']);
+
+        // Generate UUID for the user
+        $validatedData['id'] = (string) Str::uuid();
+
+        // Log the validated data for debugging
+        Log::info('Validated Data: ', $validatedData);
+
+        // Attempt to save the user and handle errors
         try {
-            $profilePath = $request->file('profile')->store('profiles', 'public');
-            $validatedData['profile'] = $profilePath;
+            $user = User::create($validatedData);
+            return redirect()->route('account-center.index')->with('success', 'User successfully created.');
         } catch (\Exception $e) {
-            Log::error('Profile image upload failed: ' . $e->getMessage());
-            return redirect()->back()->withInput()->withErrors(['error' => 'Profile image upload failed. Please try again.']);
+            // Log the error for debugging
+            Log::error('User creation failed: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create user. Please try again later.']);
         }
     }
-
-    // Hash the password before saving
-    $validatedData['password'] = bcrypt($validatedData['password']);
-
-    // Generate UUID for the user
-    $validatedData['id'] = (string) Str::uuid();
-
-    // Log the validated data for debugging
-    Log::info('Validated Data: ', $validatedData);
-
-    // Attempt to save the user and handle errors
-    try {
-        $user = User::create($validatedData);
-        return redirect()->route('account-center.index')->with('success', 'User successfully created.');
-    } catch (\Exception $e) {
-        // Log the error for debugging
-        Log::error('User creation failed: ' . $e->getMessage());
-
-        // Redirect back with an error message
-        return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create user. Please try again later.']);
-    }
-}
-
-    
     /**
      * Display the specified resource.
      */
     public function show($username)
     {
         $user = User::where('username', $username)->firstOrFail();
-        return view('AccountCenter.show',[
+        return view('AccountCenter.show', [
             "judul" => "Account Center",
-            "user"=> $user,
-            "role" =>Jobdesk::all()
+            "user" => $user,
+            "role" => Jobdesk::all()
         ]);
     }
 
@@ -109,10 +111,10 @@ class AccountController extends Controller
     public function edit($username)
     {
         $user = User::where('username', $username)->firstOrFail();
-        return view('AccountCenter.edit',[
+        return view('AccountCenter.edit', [
             "judul" => "Account Center",
-            "user"=> $user,
-            "role" =>Jobdesk::all()
+            "user" => $user,
+            "role" => Jobdesk::all()
         ]);
     }
 
@@ -135,6 +137,10 @@ class AccountController extends Controller
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        // Handle no_hp and no_wa formatting
+        $validatedData['no_hp'] = str_replace('08', '628', $validatedData['no_hp']);
+        $validatedData['no_wa'] = str_replace('08', '628', $validatedData['no_wa']);
+
         // Find the user by username
         $user = User::where('username', $username)->firstOrFail();
 
@@ -155,54 +161,52 @@ class AccountController extends Controller
             }
         }
 
-    // Update the password if provided
-    if ($request->filled('password')) {
-        $validatedData['password'] = bcrypt($validatedData['password']);
-    } else {
-        // Remove password from the data array if not provided
-        unset($validatedData['password']);
-    }
-
-    // Update the user's record
-    try {
-        $user->update($validatedData);
-        return redirect()->route('account-center.index')->with('success', 'User successfully updated.');
-    } catch (\Exception $e) {
-        // Log the error for debugging
-        Log::error('User update failed: ' . $e->getMessage());
-
-        // Redirect back with an error message
-        return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update user. Please try again later.']);
-    }
-}
-
-
-    /**
- * Remove the specified resource from storage.
- */
-public function destroy($username)
-{
-    // Find the user by username
-    $user = User::where('username', $username)->firstOrFail();
-
-    try {
-        // Delete the user's profile image if it exists
-        if ($user->profile) {
-            Storage::disk('public')->delete($user->profile);
+        // Update the password if provided
+        if ($request->filled('password')) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
+        } else {
+            // Remove password from the data array if not provided
+            unset($validatedData['password']);
         }
 
-        // Delete the user
-        $user->delete();
+        // Update the user's record
+        try {
+            $user->update($validatedData);
+            return redirect()->route('account-center.index')->with('success', 'User successfully updated.');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('User update failed: ' . $e->getMessage());
 
-        // Redirect with success message
-        return redirect()->route('account-center.index')->with('success', 'User successfully deleted.');
-    } catch (\Exception $e) {
-        // Log the error for debugging
-        Log::error('User deletion failed: ' . $e->getMessage());
-
-        // Redirect back with an error message
-        return redirect()->back()->withErrors(['error' => 'Failed to delete user. Please try again later.']);
+            // Redirect back with an error message
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update user. Please try again later.']);
+        }
     }
-}
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($username)
+    {
+        // Find the user by username
+        $user = User::where('username', $username)->firstOrFail();
+
+        try {
+            // Delete the user's profile image if it exists
+            if ($user->profile) {
+                Storage::disk('public')->delete($user->profile);
+            }
+
+            // Delete the user
+            $user->delete();
+
+            // Redirect with success message
+            return redirect()->route('account-center.index')->with('success', 'User successfully deleted.');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('User deletion failed: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return redirect()->back()->withErrors(['error' => 'Failed to delete user. Please try again later.']);
+        }
+    }
 
 }

@@ -10,4 +10,10 @@ class Departemen extends Model
     use HasFactory;
 
     protected $table = 'departemens';
+
+    // Relationship with Draft
+    public function drafts()
+    {
+        return $this->hasMany(Draft::class); // This sets up the reverse relationship
+    }
 }

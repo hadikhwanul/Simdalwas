@@ -60,7 +60,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link {{ request()->routeIs('settings.change-password') ? 'active' : '' }}"
                                         href="{{ route('settings.change-password') }}">
-                                        Change Password
+                                        Ubah Password
                                     </a>
                                 </li>
                             </ul>

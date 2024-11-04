@@ -95,61 +95,67 @@
                             <h5 class="card-title">Datatables</h5>
                             <div class="py-3 pe-2">
                                 <button type="button" class="btn btn-warning rounded-pill"><Strong><i
-                                        class='bx bx-plus'></i>Tambah</Strong></button>
+                                            class='bx bx-plus'></i>Tambah</Strong></button>
                             </div>
                         </div>
                         <!-- Table with stripped rows -->
                         <table class="table datatable">
                             <thead>
                                 <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Judul</th>
-                                    <th scope="col">Tanggal</th>
-                                    <th scope="col">No LHP</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">T</th>
-                                    <th scope="col">P</th>
-                                    <th scope="col">R</th>
-                                    <th scope="col">TL</th>
-                                    <th scope="col">Aksi</th>
+                                    <th class="text-center" scope="col" style="max-width: 5%;">No</th>
+                                    <th class="text-center" scope="col" style="max-width: 20%;">Judul</th>
+                                    <th class="text-center" scope="col" style="max-width: 15%;">Tanggal</th>
+                                    <th class="text-center" scope="col" style="max-width: 15%;">No LHP</th>
+                                    <th class="text-center" scope="col" style="max-width: 20%;">Type</th>
+                                    <th class="text-center" scope="col" style="max-width: 10%;">T</th>
+                                    <th class="text-center" scope="col" style="max-width: 10%;">P</th>
+                                    <th class="text-center" scope="col" style="max-width: 10%;">R</th>
+                                    <th class="text-center" scope="col" style="max-width: 10%;">TL</th>
+                                    <th class="text-center" scope="col" style="max-width: 20%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Brandon Jacob</td>
-                                    <td>Designer</td>
-                                    <td>2016-05-25</td>
-                                    <td>28</td>
-                                    <td>10</td>
-                                    <td>10</td>
-                                    <td>10</td>
-                                    <td>10</td>
-                                    <td>
-                                        <div class="row d-flex justify-content-center">
-                                            <div class="demo-inline-spacing">
-                                                <a href=""
-                                                    class="btn btn-outline-warning">
-                                                    <span class="tf-icons bx bx-add-to-queue me-1"></span>
-                                                </a>
-                                                <a href=""
-                                                    class="btn btn-outline-primary">
-                                                    <span class="tf-icons bx bx-edit-alt me-1"></span>
-                                                </a>
-                                                <form
-                                                    action=""
-                                                    method="POST" class="d-inline">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-outline-danger"
-                                                        onclick="return confirm('Yakin Ingin Menghapus Data?')">
-                                                        <span class="tf-icons bx bx-trash me-1"></span>
-                                                    </button>
-                                                </form>
+                                @forelse ($lhps as $lhp)
+                                    <tr>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td><a href="{{ route('draft-lhp.show', $lhp->slug) }}">{{ $lhp->judul }}</a>
+                                        </td>
+                                        <td>{{ $lhp->tanggal_lhp }}</td>
+                                        <td>{{ $lhp->no_lhp }}</td>
+                                        <td><b>Bidang:</b> {{ $lhp->bidang }} <br><br> <b>Sifat:</b>
+                                            {{ $lhp->sifat }}
+                                        </td>
+                                        <td>10</td>
+                                        <td>10</td>
+                                        <td>10</td>
+                                        <td>10</td>
+                                        <td>
+                                            <div class="row d-flex justify-content-center">
+                                                <div class="demo-inline-spacing">
+                                                    <a href="" class="btn btn-outline-warning">
+                                                        <span class="tf-icons bx bx-add-to-queue me-1"></span>
+                                                    </a>
+                                                    <a href="" class="btn btn-outline-primary">
+                                                        <span class="tf-icons bx bx-edit-alt me-1"></span>
+                                                    </a>
+                                                    <form action="" method="POST" class="d-inline">
+                                                        @method('DELETE')
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-outline-danger"
+                                                            onclick="return confirm('Yakin Ingin Menghapus Data?')">
+                                                            <span class="tf-icons bx bx-trash me-1"></span>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center">Tidak Ada Data</td>
+                                    </tr>
+                                @endforelse
+
                             </tbody>
                         </table>
                         <!-- End Table with stripped rows -->

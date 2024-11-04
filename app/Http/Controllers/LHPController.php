@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LHP;
+use App\Models\Draft;
 use Illuminate\Http\Request;
 
 class LHPController extends Controller
@@ -12,8 +13,10 @@ class LHPController extends Controller
      */
     public function index()
     {
-        return view('LHP.index',[
+        $lhp = Draft::latest()->paginate(10)->withQueryString();
+        return view('LHP.index', [
             "judul" => "LHP",
+            "lhps" => $lhp,
         ]);
     }
 

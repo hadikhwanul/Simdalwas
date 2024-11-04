@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Draft;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
     public function index()
     {
-        return view('Review.index',[
+        $review = Draft::latest()->paginate(10)->withQueryString();
+        return view('Review.index', [
             "judul" => "Review Draft LHP",
+            "review" => $review,
         ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */

@@ -59,7 +59,7 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('settings.change-password') ? 'active' : '' }}"
                                     href="{{ route('settings.change-password') }}">
-                                    Change Password
+                                    Ubah Password
                                 </a>
                             </li>
                         </ul>
@@ -238,4 +238,39 @@
             </div>
         </div>
     </section>
+
+    <script>
+        // Function to preview image
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // Function to toggle password visibility
+        function togglePassword() {
+            const passwordField = document.getElementById('inputPassword');
+            const toggleIcon = document.getElementById('togglePassword');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            }
+        }
+
+        // Function to prevent non-numeric input in number fields
+        document.querySelectorAll('.number-only').forEach(input => {
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '');
+            });
+        });
+    </script>
 @endsection

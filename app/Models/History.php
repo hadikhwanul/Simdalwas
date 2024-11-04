@@ -9,5 +9,20 @@ class History extends Model
 {
     use HasFactory;
 
-    protected $table = 'historys';
+    protected $table = 'histories';
+
+    protected $fillable = [
+        'lhp_id',
+        'history',
+        'revisi_dalnis',
+        'revisi_irban',
+        'revisi_sekretaris',
+        'revisi_inspektur',
+    ];
+
+    // Relationship with Draft
+    public function draft()
+    {
+        return $this->belongsTo(Draft::class, 'lhp_id'); // Make sure to match the foreign key here
+    }
 }

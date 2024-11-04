@@ -23,7 +23,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
 
-    Route::resource('draft-lhp', DraftController::class);
+    Route::resource('draft-lhp', DraftController::class)->parameters([
+        'draft-lhp' => 'draft:slug'
+    ]);
+    Route::get('draft-lhp/{slug}/pdf', [DraftController::class, 'showPDF'])->name('draft-lhp.pdf');
+
+
+
+
+
     Route::resource('review-draft-lhp', ReviewController::class);
     Route::resource('lhp', LHPController::class);
     Route::resource('account-center', AccountController::class);
@@ -31,7 +39,7 @@ Route::middleware('auth')->group(function () {
     // Routes for the settings resource
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::get('/settings/edit', [SettingsController::class, 'edit'])->name('settings.edit');
-    Route::post('/settings/update', [SettingsController::class, 'update'])->name('settings.update');
+    Route::put('/settings/update', [SettingsController::class, 'update'])->name('settings.update');
     Route::get('settings/change-password', [SettingsController::class, 'changePassword'])->name('settings.change-password');
     Route::put('settings/change-password', [SettingsController::class, 'updatePassword'])->name('settings.update-password');
 
