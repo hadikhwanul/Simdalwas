@@ -4,20 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('tagihans', function (Blueprint $table) {
+        Schema::create('kecamatan', function (Blueprint $table) {
             $table->id();
-            $table->string('kecamatan');
-            $table->string('desa');
-            $table->string('sub_satker');
-            $table->string('kerugian');
-            $table->string('kewajiban');
+            $table->integer('no_camat'); // Nomor OPD
+            $table->integer('no_deskel'); // Nomor sekolah, default ke '0'
+            $table->string('kecamatan'); // Nama OPD
+            $table->string('deskel'); // Nama sekolah
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tagihans');
+        Schema::dropIfExists('kecamatan');
     }
 };

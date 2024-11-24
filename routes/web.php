@@ -1,13 +1,17 @@
 <?php
 
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DraftController;
-use App\Http\Controllers\LHPController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\SettingsController;
+use App\Models\PokokTemuan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LHPController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DraftController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\PenanggungController;
+use App\Http\Controllers\TindakController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,14 +30,32 @@ Route::middleware('auth')->group(function () {
     Route::resource('draft-lhp', DraftController::class)->parameters([
         'draft-lhp' => 'draft:slug'
     ]);
-    Route::get('draft-lhp/{slug}/pdf', [DraftController::class, 'showPDF'])->name('draft-lhp.pdf');
-
-
-
-
 
     Route::resource('review-draft-lhp', ReviewController::class);
-    Route::resource('lhp', LHPController::class);
+    Route::put('review-dalnis/{review:slug}', [ReviewController::class, 'dalnis'])->name('review.dalnis');
+    Route::put('review-irban/{review:slug}', [ReviewController::class, 'irban'])->name('review.irban');
+    Route::put('review-sekretaris/{review:slug}', [ReviewController::class, 'sekretaris'])->name('review.sekretaris');
+    Route::put('review-inspektur/{review:slug}', [ReviewController::class, 'inspektur'])->name('review.inspektur');
+
+    Route::resource('lhp', LHPController::class)->parameters([
+        'lhp' => 'draft:slug'
+    ]);
+    route::get('temuan-lhp/{draft:slug}', [LHPController::class, 'temuan'])->name('lhp.temuan');
+    route::get('temuan-lhp/{draft:slug}/tambah-temuan', [LHPController::class, 'tambahtemuan'])->name('tambah.temuan');
+    Route::post('temuan-lhp/{draft:slug}/tambah-temuan', [LHPController::class, 'storetemuan'])->name('temuan.store');
+    Route::get('temuan-lhp/{draft:slug}/edit-temuan/{temuan}', [LHPController::class, 'edittemuan'])->name('temuan.edit');
+    Route::post('temuan-lhp/{draft:slug}/edit-temuan/{temuan}', [LHPController::class, 'updatetemuan'])->name('temuan.update');
+    Route::delete('/temuan-lhp/{draft:slug}/hapus-temuan/{temuan}', [LHPController::class, 'destroytemuan'])->name('temuan.destroy');
+
+
+    route::get('tindak-lanjut', [TindakController::class, 'index'])->name('tindak.index');
+    route::get('tindak-lanjut/{rekomendasi:slug}/tambah-tindak', [TindakController::class, 'create'])->name('tambah.tindak');
+
+
+    Route::resource('penanggung-jawab', PenanggungController::class);
+
+    Route::resource('laporan', LaporanController::class);
+
     Route::resource('account-center', AccountController::class);
 
     // Routes for the settings resource

@@ -182,8 +182,9 @@
                                     </a>
                                 </p>
 
-                                <iframe src="{{ asset($draft->laporan) }}" width="100%" height="500px"
-                                    style="border: none;" allowfullscreen></iframe>
+                                <!-- Pratinjau PDF -->
+                                <iframe src="{{ asset('storage/laporan_files/' . basename($draft->laporan)) }}"
+                                    width="100%" height="500px" style="border: none;" allowfullscreen></iframe>
                             @endif
 
                             @error('laporan')

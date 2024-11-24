@@ -102,7 +102,8 @@
                                         <option class="text-center" disabled {{ old('kelompok') ? '' : 'selected' }}>
                                             Pilih Kelompok
                                         </option>
-                                        <option value="Admin" {{ old('Admin') == 'Admin' ? 'selected' : '' }}>
+                                        <option value="Admin" {{ old('Admin') == 'Admin' ? 'selected' : '' }}>Admin
+                                        </option>
                                         <option value="Pimpinan" {{ old('kelompok') == 'Pimpinan' ? 'selected' : '' }}>
                                             Pimpinan
                                         </option>
@@ -131,6 +132,9 @@
                                         </option>
                                         <option value="IRBAN V" {{ old('kelompok') == 'IRBAN V' ? 'selected' : '' }}>
                                             IRBAN V
+                                        </option>
+                                        <option value="Tamu" {{ old('kelompok') == 'Tamu' ? 'selected' : '' }}>
+                                            Tamu
                                         </option>
                                     </select>
                                 </div>

@@ -57,11 +57,14 @@ class Draft extends Model
     {
         return $this->belongsTo(Departemen::class); // Assumes 'departemen_id' foreign key
     }
-
-    // Relationship with History
     // Relationship with History
     public function histories()
     {
-        return $this->hasMany(History::class, 'lhp_id'); // Ensure 'lhp_id' is the foreign key in the histories table
+        return $this->hasMany(History::class, 'lhp_id')->orderBy('created_at', 'desc'); // Ensure 'lhp_id' is the foreign key in the histories table
+    }
+
+    public function temuans()
+    {
+        return $this->hasMany(Temuan::class, 'lhp_id'); // One Draft can have many Temuans
     }
 }

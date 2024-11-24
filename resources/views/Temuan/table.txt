@@ -1,0 +1,51 @@
+Schema::create('pokok_temuan', function (Blueprint $table) {
+            $table->id();
+            $table->integer('no_pokok');
+            $table->integer('no_subpokok');
+            $table->string('pokok_temuan');
+            $table->timestamps();
+        });
+
+        Schema::create('temuans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('lhp_id')->constrained('lhps')->onUpdate('cascade')->onDelete('cascade'); // Foreign key to lhps
+            $table->string('temuan');
+            $table->string('keterangan');
+            $table->foreignId('pokok_temuan_id')->constrained('pokok_temuan')->onUpdate('cascade');
+            $table->string('user');
+            $table->timestamps();
+        });
+    Schema::create('pokok_rekomendasi', function (Blueprint $table) {
+            $table->id();
+            $table->integer('no_pokok');
+            $table->integer('no_subpokok');
+            $table->string('pokok_rekomendasi', 1000);
+            $table->timestamps();
+        });
+
+        Schema::create('rekomendasis', function (Blueprint $table) {
+            $table->id();
+            $table->string('rekomendasi');
+            $table->foreignId('temuan_id')->constrained('temuans')->onUpdate('cascade');
+            $table->foreignId('pokok_rekomendasi_id')->constrained('pokok_rekomendasi')->onUpdate('cascade');
+            $table->integer('kerugian')->nullable();
+            $table->integer('kewajiban')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('pokok_penyebab', function (Blueprint $table) {
+            $table->id();
+            $table->integer('no_pokok');
+            $table->integer('no_subpokok');
+            $table->string('pokok_penyebab');
+            $table->timestamps();
+        });
+
+        Schema::create('penyebabs', function (Blueprint $table) {
+            $table->id();
+            $table->string('penyebab');
+            $table->foreignId('temuan_id')->references('id')->on('temuans')->onUpdate('cascade');
+            $table->foreignId('id_pokok_penyebab')->references('id')->on('pokok_penyebab')->onUpdate('cascade');
+            $table->timestamps();
+        });
+

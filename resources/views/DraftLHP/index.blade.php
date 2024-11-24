@@ -1,6 +1,8 @@
 @extends('layouts.main')
 
 @section('main')
+
+
     <div class="pagetitle d-flex justify-content-between">
         <div>
             <h1>{{ $judul }}</h1>
@@ -118,7 +120,36 @@
                                         <td>{{ $draft->no_lhp }}</td>
                                         <td><b>Bidang:</b> {{ $draft->bidang }} <br><br> <b>Sifat:</b> {{ $draft->sifat }}
                                         </td>
-                                        <td class="text-center"><span class="badge bg-warning">{{ $draft->status }}</span>
+                                        <td class="text-center">
+                                            <span @class([
+                                                'badge',
+                                                'bg-warning' => in_array($draft->status, [
+                                                    'Review DALNIS',
+                                                    'Review IRBAN',
+                                                    'Review Sekretaris',
+                                                    'Review Inspektur',
+                                                ]),
+                                                'bg-success' => $draft->status === 'LHP Terbit',
+                                                'bg-danger' => in_array($draft->status, [
+                                                    'Revisi DALNIS',
+                                                    'Revisi IRBAN',
+                                                    'Revisi Sekretaris',
+                                                    'Revisi Inspektur',
+                                                ]),
+                                                'bg-secondary' => !in_array($draft->status, [
+                                                    'Review DALNIS',
+                                                    'Review IRBAN',
+                                                    'Review Sekretaris',
+                                                    'Review Inspektur',
+                                                    'LHP Terbit',
+                                                    'Revisi DALNIS',
+                                                    'Revisi IRBAN',
+                                                    'Revisi Sekretaris',
+                                                    'Revisi Inspektur',
+                                                ]),
+                                            ])>
+                                                {{ $draft->status }}
+                                            </span>
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2 justify-content-center">

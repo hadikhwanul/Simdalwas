@@ -11,13 +11,6 @@
                 </ol>
             </nav>
         </div>
-        <div class="py-3 pe-2">
-            <a href="{{ route('draft-lhp.create') }}">
-                <button type="button" class="btn btn-warning rounded-pill">
-                    <strong><i class='bx bx-plus'></i> Tambah</strong>
-                </button>
-            </a>
-        </div>
     </div>
     <!-- End Page Title -->
 
@@ -106,20 +99,48 @@
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td><b>{{ $review->user }}</b><br>{{ $review->irban }}</td>
-                                        <td><a
-                                                href="{{ route('draft-lhp.show', $review->slug) }}">{{ $review->judul }}</a>
+                                        <td><a href="{{ route('draft-lhp.show', $review->slug) }}">{{ $review->judul }}</a>
                                         </td>
                                         <td>{{ $review->tanggal_lhp }}</td>
                                         <td>{{ $review->no_lhp }}</td>
-                                        <td><b>Bidang:</b> {{ $review->bidang }} <br><br> <b>Sifat:</b>
+                                        <td><b>Bidang:</b><br> {{ $review->bidang }} <br> <b>Sifat:</b>
                                             {{ $review->sifat }}
                                         </td>
-                                        <td class="text-center"><span class="badge bg-warning">{{ $review->status }}</span>
+                                        <td class="text-center">
+                                            <span @class([
+                                                'badge',
+                                                'bg-warning' => in_array($review->status, [
+                                                    'Review DALNIS',
+                                                    'Review IRBAN',
+                                                    'Review Sekretaris',
+                                                    'Review Inspektur',
+                                                ]),
+                                                'bg-success' => $review->status === 'LHP Terbit',
+                                                'bg-danger' => in_array($review->status, [
+                                                    'Revisi DALNIS',
+                                                    'Revisi IRBAN',
+                                                    'Revisi Sekretaris',
+                                                    'Revisi Inspektur',
+                                                ]),
+                                                'bg-secondary' => !in_array($review->status, [
+                                                    'Review DALNIS',
+                                                    'Review IRBAN',
+                                                    'Review Sekretaris',
+                                                    'Review Inspektur',
+                                                    'LHP Terbit',
+                                                    'Revisi DALNIS',
+                                                    'Revisi IRBAN',
+                                                    'Revisi Sekretaris',
+                                                    'Revisi Inspektur',
+                                                ]),
+                                            ])>
+                                                {{ $review->status }}
+                                            </span>
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2 justify-content-center">
-                                                <a href="{{ route('draft-lhp.edit', $review->slug) }}"
-                                                    class="btn btn-outline-info">
+                                                <a href="{{ route('review-draft-lhp.show', $review->slug) }}"
+                                                    class="btn btn-outline-secondary">
                                                     <i class="tf-icons bx bx-task"></i>
                                                 </a>
                                             </div>

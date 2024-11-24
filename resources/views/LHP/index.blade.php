@@ -92,12 +92,35 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <h5 class="card-title">Datatables</h5>
-                            <div class="py-3 pe-2">
-                                <button type="button" class="btn btn-warning rounded-pill"><Strong><i
-                                            class='bx bx-plus'></i>Tambah</Strong></button>
-                            </div>
+                            <h5 class="card-title">Data LHP</h5>
                         </div>
+                        @if (session()->has('success'))
+                            <div class="alert border-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @if (session()->has('error'))
+                            <div class="alert border-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @if ($errors->any())
+                            <div class="alert border-danger alert-dismissible fade show" role="alert">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
                         <!-- Table with stripped rows -->
                         <table class="table datatable">
                             <thead>
@@ -118,27 +141,34 @@
                                 @forelse ($lhps as $lhp)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td><a href="{{ route('draft-lhp.show', $lhp->slug) }}">{{ $lhp->judul }}</a>
+                                        <td><a href="{{ route('lhp.show', $lhp->slug) }}">{{ $lhp->judul }}</a>
                                         </td>
                                         <td>{{ $lhp->tanggal_lhp }}</td>
                                         <td>{{ $lhp->no_lhp }}</td>
                                         <td><b>Bidang:</b> {{ $lhp->bidang }} <br><br> <b>Sifat:</b>
                                             {{ $lhp->sifat }}
                                         </td>
-                                        <td>10</td>
-                                        <td>10</td>
-                                        <td>10</td>
-                                        <td>10</td>
+                                        <td>{{ $lhp->temuans->count() }}</td>
+                                        <td>{{ $lhp->temuans->map(fn($temuan) => $temuan->penyebabs)->flatten()->count() }}
+                                        </td>
+                                        <td>{{ $lhp->temuans->map(fn($temuan) => $temuan->rekomendasis)->flatten()->count() }}
+                                        </td>
+                                        <td>{{ $lhp->temuans->map(fn($temuan) => $temuan->rekomendasis->map(fn($rekomendasi) => $rekomendasi->tindaks)->flatten())->flatten()->count() }}
+                                        </td>
+
                                         <td>
                                             <div class="row d-flex justify-content-center">
                                                 <div class="demo-inline-spacing">
-                                                    <a href="" class="btn btn-outline-warning">
+                                                    <a href="{{ route('lhp.temuan', $lhp->slug) }}"
+                                                        class="btn btn-outline-warning">
                                                         <span class="tf-icons bx bx-add-to-queue me-1"></span>
                                                     </a>
-                                                    <a href="" class="btn btn-outline-primary">
+                                                    <a href="{{ route('lhp.edit', $lhp->slug) }}"
+                                                        class="btn btn-outline-primary">
                                                         <span class="tf-icons bx bx-edit-alt me-1"></span>
                                                     </a>
-                                                    <form action="" method="POST" class="d-inline">
+                                                    <form action="{{ route('lhp.destroy', $lhp->slug) }}" method="POST"
+                                                        class="d-inline">
                                                         @method('DELETE')
                                                         @csrf
                                                         <button type="submit" class="btn btn-outline-danger"
@@ -155,7 +185,6 @@
                                         <td colspan="8" class="text-center">Tidak Ada Data</td>
                                     </tr>
                                 @endforelse
-
                             </tbody>
                         </table>
                         <!-- End Table with stripped rows -->

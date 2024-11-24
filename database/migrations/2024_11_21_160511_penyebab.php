@@ -10,20 +10,21 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('pokok_rekomendasi', function (Blueprint $table) {
+
+        Schema::create('pokok_penyebab', function (Blueprint $table) {
             $table->id();
             $table->integer('no_pokok');
             $table->integer('no_subpokok');
-            $table->string('pokok_rekomendasi', 1000); // Change 1000 to the desired length
+            $table->string('pokok_penyebab');
+            $table->string('sub_pokok_penyebab');
             $table->timestamps();
         });
 
-        Schema::create('rekomendasis', function (Blueprint $table) {
+        Schema::create('penyebabs', function (Blueprint $table) {
             $table->id();
-            $table->string('rekomendasi');
-            $table->foreignId('pokok_rekomendasi_id')->references('id')->on('pokok_rekomendasi')->onUpdate('cascade');
-            $table->integer('kerugian')->nullable();
-            $table->integer('kewajiban')->nullable();
+            $table->string('penyebab');
+            $table->foreignId('temuan_id')->references('id')->on('temuans')->onUpdate('cascade');
+            $table->foreignId('id_pokok_penyebab')->references('id')->on('pokok_penyebab')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('rekomendasis');
+        Schema::dropIfExists('penyebabs');
     }
 };

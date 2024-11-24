@@ -21,7 +21,7 @@ class AccountController extends Controller
     {
         return view('AccountCenter.index', [
             "judul" => "Account Center",
-            "users" => User::latest()->paginate(4)->withQueryString()
+            "users" => User::latest()->paginate(25)->withQueryString()
 
         ]);
     }

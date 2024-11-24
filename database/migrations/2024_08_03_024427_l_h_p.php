@@ -20,12 +20,12 @@ return new class extends Migration {
             $table->foreignId('induk_id')->constrained('induks')->onUpdate('cascade');
             $table->foreignId('departemen_id')->nullable()->constrained('departemens')->onUpdate('cascade');
             $table->string('bidang')->nullable();
-            $table->string('pemeriksa');
+            $table->text('pemeriksa');
             $table->string('irban');
             $table->string('user');
             $table->string('sifat');
             $table->string('status');
-            $table->string('laporan');
+            $table->string('laporan')->nullable();
             $table->timestamps();
         });
 

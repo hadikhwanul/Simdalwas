@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->integer('no_pokok');
             $table->integer('no_subpokok');
             $table->string('pokok_temuan');
+            $table->string('sub_pokok_temuan');
             $table->timestamps();
         });
 
@@ -24,12 +25,9 @@ return new class extends Migration {
             $table->string('temuan');
             $table->string('keterangan');
             $table->foreignId('pokok_temuan_id')->constrained('pokok_temuan')->onUpdate('cascade');
-            $table->foreignId('penyebab_id')->constrained('penyebabs')->onUpdate('cascade');
-            $table->foreignId('rekomendasi_id')->constrained('rekomendasis')->onUpdate('cascade');
-            $table->foreignId('tindak_id')->constrained('tindaks')->onUpdate('cascade');
+            $table->string('user');
             $table->timestamps();
         });
-
     }
 
     /**

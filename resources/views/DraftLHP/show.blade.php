@@ -80,13 +80,16 @@
                                         @if ($draft->laporan)
                                             <p class="text-muted mt-1">
                                                 Current file:
-                                                <a href="{{ asset($draft->laporan) }}" target="_blank"
-                                                    class="text-decoration-underline">
+                                                <a href="{{ asset('storage/laporan_files/' . basename($draft->laporan)) }}"
+                                                    target="_blank" class="text-decoration-underline" download>
                                                     {{ basename($draft->laporan) }}
                                                 </a>
                                             </p>
-                                            <iframe src="{{ asset($draft->laporan) }}" width="100%" height="500px"
-                                                style="border: none;" allowfullscreen></iframe>
+
+                                            <!-- Pratinjau PDF -->
+                                            <iframe src="{{ asset('storage/laporan_files/' . basename($draft->laporan)) }}"
+                                                width="100%" height="500px" style="border: none;"
+                                                allowfullscreen></iframe>
                                         @else
                                             <p class="text-danger">Laporan tidak tersedia.</p>
                                         @endif
@@ -126,12 +129,11 @@
 
                         <div class="activity">
                             @forelse ($draft->histories as $history)
-                                <!-- Assuming $draft is passed to the view -->
                                 <div class="activity-item d-flex">
                                     <div class="activite-label">{{ $history->created_at->diffForHumans() }}</div>
                                     <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
                                     <div class="activity-content">
-                                        {{ $history->history }} <!-- Adjust as per your History model fields -->
+                                        {{ $history->history }}
                                     </div>
                                 </div><!-- End activity item-->
                             @empty

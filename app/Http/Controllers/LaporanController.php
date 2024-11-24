@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Draft;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class LaporanController extends Controller
 {
@@ -11,7 +13,11 @@ class LaporanController extends Controller
      */
     public function index()
     {
-        //
+        $drafts = Draft::latest()->paginate(10)->withQueryString();
+        return view('Laporan.index', [
+            'judul' => 'Laporan',
+            'drafts' => $drafts,
+        ]);
     }
 
     /**

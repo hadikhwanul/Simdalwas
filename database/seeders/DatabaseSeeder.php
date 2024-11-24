@@ -8,6 +8,7 @@ use App\Models\Auditor;
 use App\Models\Departemen;
 use App\Models\Induk;
 use App\Models\Jobdesk;
+use App\Models\LHP;
 use App\Models\PokokPenyebab;
 use App\Models\PokokRekomendasi;
 use App\Models\PokokTemuan;
@@ -31,8 +32,7 @@ class DatabaseSeeder extends Seeder
     Jobdesk::create(['role' => 'IRBAN']);
     Jobdesk::create(['role' => 'DALNIS']);
     Jobdesk::create(['role' => 'Anggota']);
-    Jobdesk::create(['role' => 'Staff']);
-    Jobdesk::create(['role' => 'Tanggung Jawab']);
+    Jobdesk::create(['role' => 'Penanggung Jawab']);
 
     //USer
     User::create([
@@ -40,13 +40,104 @@ class DatabaseSeeder extends Seeder
       'profile' => 'IMG_ORIi 800.jpg',
       'nama' => 'Hadi Ikhwanul Fuadi',
       'username' => 'hadi_ikhwanul',
-      'NIP' => '225150209111002',
+      'NIP' => '225150209111001',
       'no_hp' => '081997963759',
       'no_wa' => '081997963759',
       'kelompok' => 'Admin',
       'jobdesk_id' => '1',
       'email' => 'hadikhwanul@gmail.com',
       'password' => bcrypt('hadi'),
+    ]);
+
+    User::create([
+      'id' => Str::uuid(),
+      'nama' => 'Admin',
+      'username' => 'Admin',
+      'NIP' => '225150209111002',
+      'no_hp' => '081997963752',
+      'no_wa' => '081997963752',
+      'kelompok' => 'Admin',
+      'jobdesk_id' => '2',
+      'email' => 'Admin@gmail.com',
+      'password' => bcrypt('Admin'),
+    ]);
+
+    User::create([
+      'id' => Str::uuid(),
+      'nama' => 'Pak INSPEKTUR',
+      'username' => 'inspektur',
+      'NIP' => '225150209111003',
+      'no_hp' => '081997963753',
+      'no_wa' => '081997963753',
+      'kelompok' => 'Pimpinan',
+      'jobdesk_id' => '3',
+      'email' => 'inspektur@gmail.com',
+      'password' => bcrypt('inspektur'),
+    ]);
+
+    User::create([
+      'id' => Str::uuid(),
+      'nama' => 'Pak SEKRETARIS',
+      'username' => 'sekretaris',
+      'NIP' => '225150209111004',
+      'no_hp' => '081997963754',
+      'no_wa' => '081997963754',
+      'kelompok' => 'Sekretaris',
+      'jobdesk_id' => '4',
+      'email' => 'sekretaris@gmail.com',
+      'password' => bcrypt('sekretaris'),
+    ]);
+
+    User::create([
+      'id' => Str::uuid(),
+      'nama' => 'Bu IRBAN',
+      'username' => 'irban',
+      'NIP' => '225150209111005',
+      'no_hp' => '081997963755',
+      'no_wa' => '081997963755',
+      'kelompok' => 'IRBAN IV',
+      'jobdesk_id' => '5',
+      'email' => 'irban@gmail.com',
+      'password' => bcrypt('irban'),
+    ]);
+
+    User::create([
+      'id' => Str::uuid(),
+      'nama' => 'Bu DALNIS',
+      'username' => 'dalnis',
+      'NIP' => '225150209111006',
+      'no_hp' => '081997963756',
+      'no_wa' => '081997963756',
+      'kelompok' => 'IRBAN III',
+      'jobdesk_id' => '6',
+      'email' => 'dalnis@gmail.com',
+      'password' => bcrypt('dalnis'),
+    ]);
+
+    User::create([
+      'id' => Str::uuid(),
+      'nama' => 'Abang Anggota',
+      'username' => 'anggota',
+      'NIP' => '225150209111007',
+      'no_hp' => '081997963757',
+      'no_wa' => '081997963757',
+      'kelompok' => 'IRBAN II',
+      'jobdesk_id' => '7',
+      'email' => 'anggota@gmail.com',
+      'password' => bcrypt('anggota'),
+    ]);
+
+    User::create([
+      'id' => Str::uuid(),
+      'nama' => 'Penanggung',
+      'username' => 'penanggung',
+      'NIP' => '225150209111008',
+      'no_hp' => '081997963758',
+      'no_wa' => '081997963758',
+      'kelompok' => 'Tamu',
+      'jobdesk_id' => '8',
+      'email' => 'penanggung@gmail.com',
+      'password' => bcrypt('penanggung'),
     ]);
 
     //Auditor  
@@ -172,6 +263,15 @@ class DatabaseSeeder extends Seeder
 
     //Pokok Tindak Lanjut
     $this->call(PokokTindakSeeder::class);
+
+    //Pokok Kecamatan
+    $this->call(KecamatanSeeder::class);
+
+    //Pokok Satker
+    $this->call(SatkerSeeder::class);
+
+    LHP::factory(30)->create(); // Seed LHPS
+
 
   }
 }
