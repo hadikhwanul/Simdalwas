@@ -11,15 +11,19 @@ class PokokRekomendasi extends Model
 
     protected $table = 'pokok_rekomendasi';
 
-    public function scopePokok($query)
+    // Get distinct Pokok Rekomendasi
+    public static function getDistinctPokokRekomendasi()
     {
-        return $query->where('no_subpokok', 0);
+        return self::select('pokok_rekomendasi', 'no_pokok')->distinct()->get();
     }
 
-    // Scope untuk mengambil hanya Sub Pokok Temuan
-    public function scopeSubPokok($query)
+    // Get distinct Sub Pokok Rekomendasi, excluding no_subpokok = '00'
+    public static function getDistinctSubPokokRekomendasi()
     {
-        return $query->where('no_subpokok', '!=', 0);
+        return self::select('pokok_rekomendasi', 'sub_pokok_rekomendasi', 'no_pokok', 'no_subpokok', 'id')
+            ->where('no_subpokok', '!=', '00')
+            ->distinct()
+            ->get();
     }
 
     protected $fillable = [

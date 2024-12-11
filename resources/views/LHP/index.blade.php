@@ -157,14 +157,16 @@
                                         </td>
 
                                         <td>
-                                            <div class="row d-flex justify-content-center">
+                                            <div class="row text-center">
                                                 <div class="demo-inline-spacing">
                                                     <a href="{{ route('lhp.temuan', $lhp->slug) }}"
-                                                        class="btn btn-outline-warning">
+                                                        class="btn btn-outline-warning" data-toggle="tooltip"
+                                                        title="Daftar Temuan">
                                                         <span class="tf-icons bx bx-add-to-queue me-1"></span>
                                                     </a>
                                                     <a href="{{ route('lhp.edit', $lhp->slug) }}"
-                                                        class="btn btn-outline-primary">
+                                                        class="btn btn-outline-primary" data-toggle="tooltip"
+                                                        title="Perbarui Data">
                                                         <span class="tf-icons bx bx-edit-alt me-1"></span>
                                                     </a>
                                                     <form action="{{ route('lhp.destroy', $lhp->slug) }}" method="POST"
@@ -172,6 +174,7 @@
                                                         @method('DELETE')
                                                         @csrf
                                                         <button type="submit" class="btn btn-outline-danger"
+                                                            data-toggle="tooltip" title="Hapus Data"
                                                             onclick="return confirm('Yakin Ingin Menghapus Data?')">
                                                             <span class="tf-icons bx bx-trash me-1"></span>
                                                         </button>

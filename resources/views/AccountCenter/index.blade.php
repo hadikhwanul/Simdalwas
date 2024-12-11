@@ -79,12 +79,14 @@
                                             <div class="row d-flex justify-content-center">
                                                 <div class="demo-inline-spacing">
                                                     <a href="{{ route('account-center.edit', $user->username) }}"
-                                                        class="btn btn-outline-primary">
+                                                        class="btn btn-outline-primary" data-toggle="tooltip"
+                                                        title="Perbarui Data">
                                                         <span class="tf-icons bx bx-edit-alt me-1"></span>
                                                     </a>
 
                                                     <form action="{{ route('account-center.destroy', $user->username) }}"
-                                                        method="POST" class="d-inline">
+                                                        method="POST" class="d-inline" data-toggle="tooltip"
+                                                        title="Hapus Data">
                                                         @method('DELETE')
                                                         @csrf
                                                         <button type="submit" class="btn btn-outline-danger"

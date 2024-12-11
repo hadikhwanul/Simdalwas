@@ -11,10 +11,6 @@
                 </ol>
             </nav>
         </div>
-        <div class="py-3 pe-2"><a href="{{ route('penanggung-jawab.create') }}">
-                <button type="button" class="btn btn-warning rounded-pill"><Strong><i
-                            class='bx bx-plus'></i>Tambah</Strong></button></a>
-        </div>
     </div><!-- End Page Title -->
     <section class="section">
         <div class="row">
@@ -55,12 +51,15 @@
                         <table class="table datatable">
                             <thead>
                                 <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Nama</th>
-                                    <th scope="col">Username</th>
-                                    <th scope="col">Kelompok</th>
-                                    <th scope="col">Role</th>
-                                    <th scope="col">Aksi</th>
+                                    <th class="text-center" style="max-width: 10%;">No</th>
+                                    <th class="text-center" style="max-width: 20%;">Penanggung Jawab</th>
+                                    <th class="text-center" style="max-width: 20%;">OPD & Satker</th>
+                                    <th class="text-center" style="max-width: 20%;">Kecamatan & Desa Kelurahan</th>
+                                    <th class="text-center" style="max-width: 20%;">Status</th>
+                                    <th class="text-center" style="max-width: 10%;">Kerugian</th>
+                                    <th class="text-center" style="max-width: 10%;">Kewajiban</th>
+                                    <th class="text-center" style="max-width: 10%;">Jumlah Pembayaran</th>
+                                    <th class="text-center" style="max-width: 10%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,25 +74,23 @@
                                         <td>{{ $user->username }}</td>
                                         <td>{{ $user->kelompok }}</td>
                                         <td>{{ $user->jobdesks->role }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                         <td>
                                             <div class="row text-center">
                                                 <div class="demo-inline-spacing">
                                                     <a href="{{ route('penanggung-jawab.edit', $user->username) }}"
                                                         class="btn btn-outline-primary" data-toggle="tooltip"
-                                                        title="Perbarui Data">
-                                                        <span class="tf-icons bx bx-edit-alt me-1"></span>
+                                                        title="Validasi Pengembalian Dana">
+                                                        <span class="tf-icons bx bx-task me-1"></span>
+                                                    </a>
+                                                    <a href="{{ route('daftar.bayar') }}" class="btn btn-outline-success"
+                                                        data-toggle="tooltip" title="Daftar Pembayaran">
+                                                        <span class="tf-icons bx bx-money-withdraw me-1"></span>
                                                     </a>
 
-                                                    <form action="{{ route('penanggung-jawab.destroy', $user->username) }}"
-                                                        method="POST" class="d-inline">
-                                                        @method('DELETE')
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-outline-danger"
-                                                            data-toggle="tooltip" title="Hapus Data"
-                                                            onclick="return confirm('Yakin Ingin Menghapus Data?')">
-                                                            <span class="tf-icons bx bx-trash me-1"></span>
-                                                        </button>
-                                                    </form>
+
                                                 </div>
                                             </div>
                                         </td>

@@ -20,6 +20,11 @@
 <script src="{{ URL::asset('assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
 <script src="{{ URL::asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ URL::asset('assets/vendor/php-email-form/validate.js') }}"></script>
-
+<script>
+    $(document).ready(function() {
+        // Menginisialisasi tooltip pada semua elemen dengan atribut data-toggle="tooltip"
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 <!-- Template Main JS File -->
 <script src="{{ URL::asset('assets/js/main.js') }}"></script>

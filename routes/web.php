@@ -50,9 +50,17 @@ Route::middleware('auth')->group(function () {
 
     route::get('tindak-lanjut', [TindakController::class, 'index'])->name('tindak.index');
     route::get('tindak-lanjut/{rekomendasi:slug}/tambah-tindak', [TindakController::class, 'create'])->name('tambah.tindak');
+    route::post('tindak-lanjut/{rekomendasi:slug}/tambah-tindak', [TindakController::class, 'store'])->name('store.tindak');
+    route::get('tindak-lanjut/{tindak:slug}/daftar-penanggung', [TindakController::class, 'daftartagih'])->name('daftar.pj');
+    route::get('tindak-lanjut/{tindak:slug}/tambah-penanggung', [TindakController::class, 'penanggungcreate'])->name('tambah.pj');
+    route::post('tindak-lanjut/{tindak:slug}/tambah-penanggung', [TindakController::class, 'penanggungstore'])->name('store.pj');
 
 
     Route::resource('penanggung-jawab', PenanggungController::class);
+    route::get('pengembalian-dana', [PenanggungController::class, 'daftartagih'])->name('daftar.tagih');
+    route::get('pengembalian-dana/daftar-bayar', [PenanggungController::class, 'daftarpembayaran'])->name('daftar.bayar');
+    route::get('pengembalian-dana/daftar-bayar/pembayaran', [PenanggungController::class, 'formbayar'])->name('form.bayar');
+
 
     Route::resource('laporan', LaporanController::class);
 

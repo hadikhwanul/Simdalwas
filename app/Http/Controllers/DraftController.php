@@ -165,21 +165,4 @@ class DraftController extends Controller
         }
     }
 
-    /**
-     * Display the PDF associated with the specified slug.
-     */
-    public function showPDF($slug)
-    {
-        $draft = Draft::where('slug', $slug)->firstOrFail();
-        $filePath = storage_path('app/public/laporan_files/' . basename($draft->laporan));
-
-        if (file_exists($filePath)) {
-            return response()->file($filePath, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . basename($draft->laporan) . '"',
-            ]);
-        }
-
-        return abort(404, 'File not found.');
-    }
 }

@@ -21,14 +21,25 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-    public function getRouteKeyName(){
+    public function getRouteKeyName()
+    {
         return 'username';
     }
 
     protected $fillable = [
-        'id', 'profile', 'nama', 'username', 'NIP', 'no_hp', 'no_wa', 'kelompok', 'jobdesk_id', 'email', 'password'
+        'id',
+        'profile',
+        'nama',
+        'username',
+        'NIP',
+        'no_hp',
+        'no_wa',
+        'kelompok',
+        'jobdesk_id',
+        'email',
+        'password'
     ];
-    
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,9 +59,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
-    public function jobdesks(){
-        return $this -> belongsTo(Jobdesk::class, 'jobdesk_id');
+
+    public function jobdesks()
+    {
+        return $this->belongsTo(Jobdesk::class, 'jobdesk_id');
+    }
+
+    public function tagihans()
+    {
+        return $this->hasMany(Tagihan::class, 'user_id');
     }
 
 

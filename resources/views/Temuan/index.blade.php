@@ -3,7 +3,7 @@
 @section('main')
     <div class="pagetitle d-flex justify-content-between">
         <div>
-            <h1>Review Draft LHP</h1>
+            <h1>Temuan LHP</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -142,10 +142,11 @@
                                         <td class="text-center"><b>{{ $temuan->penyebabs->count() }}</b></td>
                                         <td class="text-center"><b>{{ $temuan->rekomendasis->count() }}</b></td>
                                         <td class="text-center">
-                                            <div class="row d-flex justify-content-center">
+                                            <div class="row text-center">
                                                 <div class="demo-inline-spacing">
                                                     <a href="{{ route('temuan.edit', ['draft' => $lhp->slug, 'temuan' => $temuan->id]) }}"
-                                                        class="btn btn-outline-primary">
+                                                        class="btn btn-outline-primary" data-toggle="tooltip"
+                                                        title="Perbarui Data">
                                                         <span class="tf-icons bx bx-edit-alt me-1"></span>
                                                     </a>
 
@@ -155,6 +156,7 @@
                                                         @method('DELETE')
                                                         @csrf
                                                         <button type="submit" class="btn btn-outline-danger"
+                                                            data-toggle="tooltip" title="Hapus Data"
                                                             onclick="return confirm('Yakin Ingin Menghapus Data?')">
                                                             <span class="tf-icons bx bx-trash me-1"></span>
                                                         </button>

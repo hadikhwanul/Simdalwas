@@ -37,13 +37,13 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-4 label fw-bold">Pokok Temuan</div>
                             <div class="col-lg-9 col-md-8">
-                                {{ $rekomendasi->temuan->pokokTemuan->no_pokok . '. ' . $rekomendasi->temuan->pokokTemuan->pokok_temuan }}
+                                {{ $rekomendasi->temuan->pokokTemuan->no_pokok . '. ' . $rekomendasi->temuan->pokokTemuan->pokok_tindak }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-3 col-md-4 label fw-bold">Sub Pokok Temuan</div>
                             <div class="col-lg-9 col-md-8">
-                                {{ $rekomendasi->temuan->pokokTemuan->no_subpokok . '. ' . $rekomendasi->temuan->pokokTemuan->sub_pokok_temuan }}
+                                {{ $rekomendasi->temuan->pokokTemuan->no_subpokok . '. ' . $rekomendasi->temuan->pokokTemuan->sub_pokok_tindak }}
                             </div>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                     </div>
                 </div>
             </div>
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('store.tindak', $rekomendasi->slug) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-body">
@@ -111,34 +111,78 @@
                             <h5 class="card-title">Form Tambah {{ $judul }}</h5>
                             <!-- Temuan Field -->
                             <!-- Keterangan Temuan Field -->
-                            <div class="col-md-6">
-                                <label class="form-label">Keterangan Tindak</label>
-                                <input id="keterangan" type="hidden" name="keterangan"
-                                    class="form-control @error('keterangan') is-invalid @enderror"
-                                    value="{{ old('keterangan', '') }}">
-                                <trix-editor input="keterangan"></trix-editor>
-                                @error('keterangan')
+                            <div class="col-md-12">
+                                <label class="form-label">Keterangan {{ $judul }}</label>
+                                <input id="tindak" type="hidden" name="tindak"
+                                    class="form-control @error('tindak') is-invalid @enderror"
+                                    value="{{ old('tindak', '') }}">
+                                <trix-editor input="tindak"></trix-editor>
+                                @error('tindak')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-
                             <!-- Pokok Temuan Field -->
                             <div class="col-md-6">
                                 <label class="form-label">Pokok Tindak Lanjut</label>
-                                <select id="pokok_temuan" class="form-select" name="pokok_temuan" required>
-                                    <option disabled selected>Pilih Pokok Temuan</option>
-
+                                <select id="pokok_tindak" class="form-select" name="pokok_tindak" required>
+                                    <option disabled selected>Pilih Pokok Tindak Lanjut</option>
+                                    @forelse ($PokokTindak as $pokok)
+                                        <option value="{{ $pokok->no_pokok }}"
+                                            {{ old('pokok_tindak') == $pokok->no_pokok ? 'selected' : '' }}>
+                                            {{ $pokok->no_pokok }}. {{ $pokok->pokok_tindak }}
+                                        </option>
+                                    @empty
+                                        <option disabled>Tidak Ada Pokok Tindak Lanjut</option>
+                                    @endforelse
                                 </select>
                             </div>
 
-                            <!-- Sub Pokok Temuan Field -->
                             <div class="col-md-6">
                                 <label class="form-label">Sub Pokok Tindak Lanjut</label>
-                                <select id="sub_pokok_temuan" class="form-select" name="pokok_temuan_id" required>
-                                    <option disabled selected>Pilih Sub Pokok Temuan</option>
-
+                                <select id="sub_pokok_tindak" class="form-select" name="pokok_temuan_id" required>
+                                    <option selected>Pilih Sub Pokok Tindak Lanjut</option>
+                                    @forelse ($SubPokokTindak as $sub)
+                                        <option value="{{ $sub->id }}" data-no-pokok="{{ $sub->no_pokok }}">
+                                            {{ $sub->no_subpokok }}. {{ $sub->sub_pokok_tindak }}
+                                        </option>
+                                    @empty
+                                        <option disabled>Tidak Ada Sub Pokok Tindak Lanjut</option>
+                                    @endforelse
                                 </select>
                             </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Status</label>
+                                <select class="form-select @error('status') is-invalid @enderror" name="status">
+                                    <option class="text-center" disabled value="" selected>Pilih status</option>
+                                    <option value="TPB" {{ old('status') == 'TPB' ? 'selected' : '' }}>
+                                        TPB - Temuan Pemeriksaan Belum Ada Tindak Lanjut </option>
+                                    <option value="MDP" {{ old('status') == 'MDP' ? 'selected' : '' }}>
+                                        MDP - Masih Dalam Proses
+                                    </option>
+                                    <option value="TLS" {{ old('status') == 'TLS' ? 'selected' : '' }}>
+                                        TLS - Tindak Lanjut Selesai
+                                    </option>
+                                    <option value="TPTD" {{ old('status') == 'TPTD' ? 'selected' : '' }}>
+                                        TPTD - Temuan Pemeriksaan Tidak Dapat Dilanjuti</option>
+                                </select>
+                                @error('no_lhp')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tanggal Tindak Lanjut</label>
+                                <input type="date" class="form-control @error('tanggal_tl') is-invalid @enderror"
+                                    name="tanggal_tl" value="{{ old('tanggal_tl') }}" required>
+                                @error('tanggal_tl')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -153,58 +197,29 @@
 
     </section>
     <script>
-        // Format input sebagai Rupiah
-        function formatRupiah(input) {
-            let value = input.value.replace(/[^\d]/g, ''); // Hapus semua karakter selain angka
-            let formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Tambahkan titik setiap 3 digit
-
-            input.value = formattedValue; // Set nilai yang diformat
-        }
-    </script>
-    <script>
-        // Helper function to toggle Sub Select options based on parent select
-        function toggleSubOptions(parentSelect, subSelect, dataAttribute) {
-            // Get selected value from parent select
-            const selectedValue = parentSelect.value;
-
-            // Reset sub-select options
-            subSelect.value = '';
-            Array.from(subSelect.options).forEach(option => {
-                option.hidden = true; // Hide all options
-                // Show only options matching the selected parent value
-                if (option.dataset[dataAttribute] === selectedValue) {
-                    option.hidden = false;
-                }
-            });
-
-            // Enable sub-select if there are valid options
-            subSelect.disabled = !Array.from(subSelect.options).some(option => !option.hidden);
-        }
-
-        // Event Listeners for cascading dropdowns
         document.addEventListener('DOMContentLoaded', function() {
-            // Pokok Temuan & Sub Pokok Temuan
-            const pokokTemuanSelect = document.getElementById('pokok_temuan');
-            const subPokokTemuanSelect = document.getElementById('sub_pokok_temuan');
-            subPokokTemuanSelect.disabled = true; // Disable initially
-            pokokTemuanSelect.addEventListener('change', function() {
-                toggleSubOptions(pokokTemuanSelect, subPokokTemuanSelect, 'noPokok');
-            });
+            const pokokTindakSelect = document.getElementById('pokok_tindak');
+            const subPokokTindakSelect = document.getElementById('sub_pokok_tindak');
 
-            // Pokok Penyebab & Sub Pokok Penyebab
-            const pokokPenyebabSelect = document.getElementById('pokok_penyebab');
-            const subPokokPenyebabSelect = document.getElementById('sub_pokok_penyebab');
-            subPokokPenyebabSelect.disabled = true; // Disable initially
-            pokokPenyebabSelect.addEventListener('change', function() {
-                toggleSubOptions(pokokPenyebabSelect, subPokokPenyebabSelect, 'noPokok');
-            });
+            // Disable sub pokok tindak initially
+            subPokokTindakSelect.disabled = true;
 
-            // Pokok Rekomendasi & Sub Pokok Rekomendasi
-            const pokokRekomendasiSelect = document.getElementById('pokok_rekomendasi');
-            const subPokokRekomendasiSelect = document.getElementById('sub_pokok_rekomendasi');
-            subPokokRekomendasiSelect.disabled = true; // Disable initially
-            pokokRekomendasiSelect.addEventListener('change', function() {
-                toggleSubOptions(pokokRekomendasiSelect, subPokokRekomendasiSelect, 'noPokok');
+            // Event listener for cascading behavior
+            pokokTindakSelect.addEventListener('change', function() {
+                const selectedNoPokok = this.value;
+
+                // Enable sub pokok tindak and filter options
+                subPokokTindakSelect.disabled = false;
+                Array.from(subPokokTindakSelect.options).forEach(option => {
+                    if (option.getAttribute('data-no-pokok') === selectedNoPokok) {
+                        option.style.display = '';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+
+                // Reset sub pokok selection
+                subPokokTindakSelect.value = '';
             });
         });
     </script>

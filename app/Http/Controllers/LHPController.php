@@ -31,13 +31,17 @@ class LHPController extends Controller
         $lhps = Draft::with([
             'temuans.penyebabs',
             'temuans.rekomendasis.tindaks'
-        ])->latest()->paginate(10);
+        ])
+            ->where('status', 'LHP Terbit')  // Filter by status 'LHP Terbit'
+            ->latest()
+            ->paginate(10);
 
         return view('LHP.index', [
             "judul" => "LHP",
             "lhps" => $lhps,
         ]);
     }
+
 
     /**
      * Display the specified resource.
@@ -179,12 +183,12 @@ class LHPController extends Controller
         return view('Temuan.create', [
             'judul' => 'LHP',
             'lhp' => $draft,
-            'pokok_temuan' => PokokTemuan::pokok()->get(), // Data pokok temuan
-            'sub_pokok_temuan' => PokokTemuan::subPokok()->get(), // Data sub pokok temuan
-            'pokok_penyebab' => PokokPenyebab::pokok()->get(),
-            'sub_pokok_penyebab' => PokokPenyebab::subpokok()->get(),
-            'pokok_rekomendasi' => PokokRekomendasi::pokok()->get(),
-            'sub_pokok_rekomendasi' => PokokRekomendasi::subpokok()->get(),
+            'pokok_temuan' => PokokTemuan::getDistinctPokokTemuan(),
+            'sub_pokok_temuan' => PokokTemuan::getDistinctSubPokokTemuan(),
+            'pokok_penyebab' => PokokPenyebab::getDistinctPokokPenyebab(),
+            'sub_pokok_penyebab' => PokokPenyebab::getDistinctSubPokokPenyebab(),
+            'pokok_rekomendasi' => PokokRekomendasi::getDistinctPokokRekomendasi(),
+            'sub_pokok_rekomendasi' => PokokRekomendasi::getDistinctSubPokokRekomendasi(),
         ]);
     }
 

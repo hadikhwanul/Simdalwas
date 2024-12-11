@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Auditor;
 use App\Models\Departemen;
+use App\Models\Draft;
 use App\Models\Induk;
 use App\Models\Jobdesk;
 use App\Models\LHP;
@@ -270,7 +271,7 @@ class DatabaseSeeder extends Seeder
     //Pokok Satker
     $this->call(SatkerSeeder::class);
 
-    LHP::factory(30)->create(); // Seed LHPS
+    Draft::factory(30)->create(); // Seed LHPS
 
 
   }

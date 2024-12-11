@@ -34,7 +34,7 @@ class Rekomendasi extends Model
     // Define the relationship to Tindak (many-to-one)
     public function tindaks()
     {
-        return $this->belongsTo(Tindak::class);
+        return $this->hasOne(Tindak::class);
     }
 
     public function temuan()

@@ -17,16 +17,18 @@ class PokokTemuan extends Model
         'pokok_temuan',
     ];
 
-    // Scope untuk mengambil hanya Pokok Temuan
-    public function scopePokok($query)
+    public static function getDistinctPokokTemuan()
     {
-        return $query->where('no_subpokok', 0);
+        return self::select('pokok_temuan', 'no_pokok')->distinct()->get();
     }
 
-    // Scope untuk mengambil hanya Sub Pokok Temuan
-    public function scopeSubPokok($query)
+    // Get distinct Sub Pokok Temuan, excluding no_subpokok = '00'
+    public static function getDistinctSubPokokTemuan()
     {
-        return $query->where('no_subpokok', '!=', 0);
+        return self::select('pokok_temuan', 'sub_pokok_temuan', 'no_pokok', 'no_subpokok', 'id')
+            ->where('no_subpokok', '!=', '00')
+            ->distinct()
+            ->get();
     }
 
     public function temuan()

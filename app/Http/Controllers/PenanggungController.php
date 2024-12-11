@@ -214,4 +214,35 @@ class PenanggungController extends Controller
             return redirect()->back()->withErrors(['error' => 'Failed to delete user. Please try again later.']);
         }
     }
+
+    public function daftartagih()
+    {
+        $penanggung = User::where('kelompok', 'Tamu')
+            ->whereHas('jobdesks', function ($query) {
+                $query->where('role', 'Penanggung Jawab');
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString(); // Tambahkan titik koma di akhir baris ini
+
+        return view('Tagihan.index', [
+            "judul" => "Pengembalian Dana",
+            "users" => $penanggung,
+        ]);
+    }
+    public function daftarpembayaran()
+    {
+        return view('Tagihan.show', [
+            "judul" => "Pengembalian Dana",
+
+        ]);
+    }
+    public function formbayar()
+    {
+        return view('Tagihan.create', [
+            "judul" => "Pengembalian Dana",
+
+        ]);
+    }
+
 }

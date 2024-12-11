@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\Draft;
 use App\Models\Lhp;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class LhpFactory extends Factory
+class DraftFactory extends Factory
 {
-    protected $model = Lhp::class;
+    protected $model = Draft::class;
 
     public function definition(): array
     {

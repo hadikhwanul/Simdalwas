@@ -126,11 +126,13 @@
                                 <tr>
                                     <th class="text-center" scope="col" style="max-width: 5%;">No</th>
                                     <th class="text-center" scope="col" style="max-width: 15%;">LHP - Satker</th>
-                                    <th class="text-center" scope="col" style="max-width: 15%;">Rekkomendasi</th>
-                                    <th class="text-center" scope="col" style="max-width: 20%;">Uraian Tindak Lanjut</th>
-                                    <th class="text-center" scope="col" style="max-width: 15%;">Nilai Kerugian</th>
-                                    <th class="text-center" scope="col" style="max-width: 15%;">Nilai Kewajiban</th>
-                                    <th class="text-center" scope="col" style="max-width: 10%;">PJ</th>
+                                    <th class="text-center" scope="col" style="max-width: 15%;">Rekomendasi</th>
+                                    <th class="text-center" scope="col" style="max-width: 15%;">Uraian <br> Tindak Lanjut
+                                    </th>
+                                    <th class="text-center" scope="col" style="max-width: 10%;">Status</th>
+                                    <th class="text-center" scope="col" style="max-width: 10%;">Nilai Kerugian</th>
+                                    <th class="text-center" scope="col" style="max-width: 10%;">Nilai Kewajiban</th>
+                                    <th class="text-center" scope="col" style="max-width: 5%;">PJ</th>
                                     <th class="text-center" scope="col" style="max-width: 10%;">Aksi</th>
                                 </tr>
                             </thead>
@@ -144,29 +146,63 @@
                                             </a>
                                         </td>
                                         <td>{!! $rkmdn->rekomendasi !!}</td>
-                                        <td>{{ $rkmdn->no_lhp }}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{!! optional($rkmdn->tindaks)->tindak ?? '-' !!}</td>
+                                        <td class="text-center">
+                                            <span @class([
+                                                'badge',
+                                                'bg-success' => optional($rkmdn->tindaks)->status === 'TLS',
+                                                'bg-warning' => optional($rkmdn->tindaks)->status === 'MDP',
+                                                'bg-danger' => optional($rkmdn->tindaks)->status === 'TPTD',
+                                                'bg-primary' => optional($rkmdn->tindaks)->status === 'TPB',
+                                                'bg-secondary' => !in_array(optional($rkmdn->tindaks)->status, [
+                                                    'MDP',
+                                                    'TLS',
+                                                    'TPTD',
+                                                    'TPB',
+                                                ]),
+                                            ])>
+                                                {{ optional($rkmdn->tindaks)->status ?? '-' }}
+                                            </span>
+                                        </td>
+
                                         <td>
-                                            <div class="row d-flex justify-content-center">
-                                                <div class="demo-inline-spacing">
+                                            <span>Nilai: Rp.
+                                            </span><br><br>
+                                            <span>Tarik: Rp.
+                                            </span><br><br>
+                                            <span>Sisa: Rp.
+                                        </td>
+                                        <td><span>Nilai: Rp.
+                                            </span><br><br>
+                                            <span>Tarik: Rp.
+                                            </span><br><br>
+                                            <span>Sisa: Rp.
+                                        </td>
+                                        <td class="text-center">0</td>
+                                        <td>
+                                            <div class="row text-center">
+                                                <div class="demo-inline-spacing mb-1">
                                                     @if ($rkmdn->tindaks?->first()?->tindak == null)
                                                         <a href="{{ route('tambah.tindak', $rkmdn->slug) }}"
-                                                            class="btn btn-outline-warning">
+                                                            class="btn btn-outline-warning" data-toggle="tooltip"
+                                                            title="Tambah Data Tindak Lanjut">
                                                             <span class="tf-icons bx bx-add-to-queue mx-auto"></span>
                                                         </a>
                                                     @endif
-                                                    <a href="" class="btn btn-outline-primary">
+                                                    <a href="" class="btn btn-outline-primary mb-1"
+                                                        data-toggle="tooltip" title="Perbarui Data">
                                                         <span class="tf-icons bx bx-edit-alt mx-auto"></span>
                                                     </a>
-                                                    <a href="" class="btn btn-outline-success mt-2">
+                                                    <a href="{{ route('daftar.pj', $rkmdn->tindaks?->first()?->slug ?? 'default-slug') }}"
+                                                        class="btn btn-outline-success mb-1" data-toggle="tooltip"
+                                                        title="Daftar Penanggung Jawab">
                                                         <span class="tf-icons bx bx-user-plus mx-auto"></span>
                                                     </a>
-                                                    <form action="" method="POST" class="d-inline">
+                                                    <form action="" method="POST" class="d-inline mb-1">
                                                         @method('DELETE')
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-danger mt-2"
+                                                        <button type="submit" class="btn btn-outline-danger "
+                                                            data-toggle="tooltip" title="Hapus Data"
                                                             onclick="return confirm('Yakin Ingin Menghapus Data?')">
                                                             <span class="tf-icons bx bx-trash mx-auto"></span>
                                                         </button>

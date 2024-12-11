@@ -152,9 +152,10 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <div class="d-flex gap-2 justify-content-center">
+                                            <div class=" gap-2 text-center">
                                                 <a href="{{ route('draft-lhp.edit', $draft->slug) }}"
-                                                    class="btn btn-outline-primary">
+                                                    class="btn btn-outline-primary" data-toggle="tooltip"
+                                                    title="Perbarui Data">
                                                     <i class="tf-icons bx bx-edit-alt"></i>
                                                 </a>
                                                 <form action="{{ route('draft-lhp.destroy', $draft->slug) }}"
@@ -162,11 +163,13 @@
                                                     @method('DELETE')
                                                     @csrf
                                                     <button type="submit" class="btn btn-outline-danger"
+                                                        data-toggle="tooltip" title="Hapus Data"
                                                         onclick="return confirm('Yakin Ingin Menghapus Data?')">
                                                         <i class="tf-icons bx bx-trash"></i>
                                                     </button>
                                                 </form>
                                             </div>
+
                                         </td>
                                     </tr>
                                 @empty

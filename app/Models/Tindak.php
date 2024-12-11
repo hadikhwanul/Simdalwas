@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Tindak extends Model
 {
-    use HasFactory;
+    use HasFactory, Sluggable;
 
     protected $table = 'tindaks';
     protected $fillable = [
@@ -20,6 +21,15 @@ class Tindak extends Model
         'laporan_tl',
     ];
 
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => ['tindak']
+            ]
+        ];
+    }
+
     // Define the relationship to PokokTindak (many-to-one)
     public function pokokTindak()
     {
@@ -27,7 +37,7 @@ class Tindak extends Model
     }
 
     // Define the relationship to Tagihan (many-to-one)
-    public function tagihan()
+    public function tagihans()
     {
         return $this->belongsTo(Tagihan::class);
     }
@@ -35,6 +45,6 @@ class Tindak extends Model
     // Define the relationship to Rekomendasi (one-to-many)
     public function rekomendasis()
     {
-        return $this->hasMany(Rekomendasi::class);
+        return $this->belongsTo(Rekomendasi::class);
     }
 }

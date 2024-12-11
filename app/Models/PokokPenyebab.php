@@ -22,14 +22,17 @@ class PokokPenyebab extends Model
     {
         return $this->hasMany(Penyebab::class, 'id_pokok_penyebab');
     }
-    public function scopePokok($query)
+    public static function getDistinctPokokPenyebab()
     {
-        return $query->where('no_subpokok', 0);
+        return self::select('pokok_penyebab', 'no_pokok')->distinct()->get();
     }
 
-    // Scope untuk mengambil hanya Sub Pokok Temuan
-    public function scopeSubPokok($query)
+    // Get distinct Sub Pokok Penyebab, excluding no_subpokok = '00'
+    public static function getDistinctSubPokokPenyebab()
     {
-        return $query->where('no_subpokok', '!=', 0);
+        return self::select('pokok_penyebab', 'sub_pokok_penyebab', 'no_pokok', 'no_subpokok', 'id')
+            ->where('no_subpokok', '!=', '00')
+            ->distinct()
+            ->get();
     }
 }

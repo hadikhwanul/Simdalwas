@@ -156,6 +156,9 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @error('pokok_penyebab')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <!-- Keterangan Penyebab Field -->
@@ -181,7 +184,9 @@
                                         </option>
                                     @endforeach
                                 </select>
-
+                                @error('id_pokok_penyebab')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -218,7 +223,7 @@
                             </div>
 
                             <!-- Sub Pokok Rekomendasi Field -->
-                            <div class="col-md-6" style="margin-top: -6%">
+                            <div class="col-md-6" style="margin-top: -4%">
                                 <label class="form-label">Sub Pokok Rekomendasi</label>
                                 <select id="sub_pokok_rekomendasi" class="form-select" name="pokok_rekomendasi_id"
                                     required>

@@ -140,7 +140,8 @@
                                         <td>
                                             <div class="d-flex gap-2 justify-content-center">
                                                 <a href="{{ route('review-draft-lhp.show', $review->slug) }}"
-                                                    class="btn btn-outline-secondary">
+                                                    class="btn btn-outline-secondary" data-toggle="tooltip"
+                                                    title="Review Draft LHP">
                                                     <i class="tf-icons bx bx-task"></i>
                                                 </a>
                                             </div>
