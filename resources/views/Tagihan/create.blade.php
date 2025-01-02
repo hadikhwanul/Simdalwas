@@ -31,25 +31,38 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-4 label fw-bold">Satuan Kerja</div>
                             <div class="col-lg-9 col-md-8">
-
+                                {{ $tagih->satker->opd }} - {{ $tagih->satker->sekolah }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3 col-md-4 label fw-bold">Sisa Kerugian</div>
-                            <div class="col-lg-9 col-md-8"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 label fw-bold">Sisa Kewajiban</div>
+                            <div class="col-lg-3 col-md-4 label fw-bold">Kecamatan</div>
                             <div class="col-lg-9 col-md-8">
-
+                                {{ $tagih->kecamatan->kecamatan }} - {{ $tagih->kecamatan->deskel }}
                             </div>
-                        </div>
+                        </div><br>
                         <div class="row">
-                            <div class="col-lg-3 col-md-4 label fw-bold">Tenggat Waktu</div>
-                            <div class="col-lg-9 col-md-8">
-
+                            <div class="col-lg-6 row">
+                                <div class="col-lg-5 col-md-4 label fw-bold">Total Kerugian</div>
+                                <div class="col-lg-6 col-md-8">
+                                    <span>Nilai: Rp. {{ $tagih->total_kerugian }}
+                                    </span><br>
+                                    <span>Sisa: Rp. {{ $tagih->sisa_kerugian }}
+                                    </span><br>
+                                    <span>Tarik: Rp. {{ $tagih->bayar_kerugian }}
+                                </div>
+                            </div>
+                            <div class="col-lg-6 row">
+                                <div class="col-lg-6 col-md-4 label fw-bold">Total Kewajiban</div>
+                                <div class="col-lg-6 col-md-8">
+                                    <span>Nilai: Rp. {{ $tagih->total_kewajiban }}
+                                    </span><br>
+                                    <span>Sisa: Rp. {{ $tagih->sisa_kewajiban }}
+                                    </span><br>
+                                    <span>Tarik: Rp. {{ $tagih->bayar_kewajiban }}
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -59,38 +72,40 @@
                     <div class="card-body">
                         <h5 class="card-title">Form Pembayaran</h5>
                         <div class="row g-3">
-                            <!-- Pilihan Jenis Pembayaran -->
+                            <!-- Sisa Pembayaran -->
                             <div class="col-md-6">
-                                <label class="form-label">Jenis Pembayaran</label>
-                                <select class="form-control @error('jenis_pembayaran') is-invalid @enderror"
-                                    name="jenis_pembayaran" required>
-                                    <option value="">Pilih Jenis Pembayaran</option>
-                                    <option value="kewajiban"
-                                        {{ old('jenis_pembayaran') == 'kewajiban' ? 'selected' : '' }}>Kewajiban</option>
-                                    <option value="kerugian" {{ old('jenis_pembayaran') == 'kerugian' ? 'selected' : '' }}>
-                                        Kerugian</option>
-                                </select>
-                                @error('jenis_pembayaran')
+                                <label class="form-label">Sisa Pembayaran Kerugian</label>
+                                <input type="text" class="form-control @error('sisa_rugi') is-invalid @enderror"
+                                    name="sisa_rugi" id="sisa_rugi" value="{{ $tagih->sisa_kerugian }}" readonly>
+                                @error('sisa_rugi')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-
-                            <!-- Sisa Pembayaran -->
                             <div class="col-md-6">
-                                <label class="form-label">Sisa Pembayaran</label>
-                                <input type="text" class="form-control @error('sisa_pembayaran') is-invalid @enderror"
-                                    name="sisa_pembayaran" value="{{ old('sisa_pembayaran') }}" readonly>
-                                @error('sisa_pembayaran')
+                                <label class="form-label">Sisa Pembayaran kewajiban</label>
+                                <input type="text" class="form-control @error('sisa_wajib') is-invalid @enderror"
+                                    name="sisa_wajib" id="sisa_wajib" value="{{ $tagih->sisa_kewajiban }}" readonly>
+                                @error('sisa_wajib')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <!-- Jumlah Pembayaran -->
                             <div class="col-md-6">
-                                <label class="form-label">Jumlah Pembayaran</label>
-                                <input type="number" class="form-control @error('jumlah_pembayaran') is-invalid @enderror"
-                                    name="jumlah_pembayaran" value="{{ old('jumlah_pembayaran') }}" required>
-                                @error('jumlah_pembayaran')
+                                <label class="form-label">Jumlah Pembayaran Kerugian</label>
+                                <input type="number" id="bayar_rugi"
+                                    class="form-control @error('bayar_rugi') is-invalid @enderror" name="bayar_rugi"
+                                    value="{{ old('bayar_rugi') }}" required>
+                                @error('bayar_rugi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <!-- Jumlah Pembayaran -->
+                            <div class="col-md-6">
+                                <label class="form-label">Jumlah Pembayaran Kewajiban</label>
+                                <input type="number" class="form-control @error('bayar_wajib') is-invalid @enderror"
+                                    name="bayar_wajib" id="bayar_wajib" value="{{ old('bayar_wajib') }}" required>
+                                @error('bayar_wajib')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -98,14 +113,14 @@
                             <!-- Tanggal Pembayaran -->
                             <div class="col-md-6">
                                 <label class="form-label">Tanggal Pembayaran</label>
-                                <input type="date" class="form-control @error('tanggal_pembayaran') is-invalid @enderror"
-                                    name="tanggal_pembayaran" value="{{ old('tanggal_pembayaran') }}" required>
-                                @error('tanggal_pembayaran')
+                                <input type="date" class="form-control @error('tanggal_bayar') is-invalid @enderror"
+                                    name="tanggal_bayar" value="{{ old('tanggal_bayar') }}" required>
+                                @error('tanggal_bayar')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label class="form-label">Unggah Resi</label>
                                 <input type="file" class="form-control @error('resi') is-invalid @enderror"
                                     name="resi" accept="image/*" onchange="previewImage(event)">
@@ -133,8 +148,55 @@
 
 
     </section>
-
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get references to input fields
+            const sisaRugiInput = document.getElementById('sisa_rugi');
+            const jumlahRugiInput = document.getElementById('bayar_rugi');
+            const sisaWajibInput = document.getElementById('sisa_wajib');
+            const jumlahWajibInput = document.getElementById('bayar_wajib');
+
+            // Store original values for reset functionality
+            const originalSisaRugi = parseFloat(sisaRugiInput.value) || 0;
+            const originalSisaWajib = parseFloat(sisaWajibInput.value) || 0;
+
+            // Add event listeners to update remaining values dynamically
+            jumlahRugiInput.addEventListener('input', function() {
+                const jumlahRugi = parseFloat(jumlahRugiInput.value) || 0;
+
+                // Calculate remaining value and ensure it doesn't go below 0
+                let newSisaRugi = originalSisaRugi - jumlahRugi;
+                newSisaRugi = newSisaRugi < 0 ? 0 : newSisaRugi;
+
+                // Update sisa_rugi field
+                sisaRugiInput.value = newSisaRugi.toFixed(2);
+            });
+
+            jumlahWajibInput.addEventListener('input', function() {
+                const jumlahWajib = parseFloat(jumlahWajibInput.value) || 0;
+
+                // Calculate remaining value and ensure it doesn't go below 0
+                let newSisaWajib = originalSisaWajib - jumlahWajib;
+                newSisaWajib = newSisaWajib < 0 ? 0 : newSisaWajib;
+
+                // Update sisa_wajib field
+                sisaWajibInput.value = newSisaWajib.toFixed(2);
+            });
+
+            // Reset sisa values if inputs are cleared
+            jumlahRugiInput.addEventListener('blur', function() {
+                if (!jumlahRugiInput.value) {
+                    sisaRugiInput.value = originalSisaRugi.toFixed(2);
+                }
+            });
+
+            jumlahWajibInput.addEventListener('blur', function() {
+                if (!jumlahWajibInput.value) {
+                    sisaWajibInput.value = originalSisaWajib.toFixed(2);
+                }
+            });
+        });
+
         function previewImage(event) {
             const preview = document.getElementById('preview');
             const file = event.target.files[0];

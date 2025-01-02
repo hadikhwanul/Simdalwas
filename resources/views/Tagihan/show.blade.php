@@ -30,19 +30,45 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-4 label fw-bold">Satuan Kerja</div>
                             <div class="col-lg-9 col-md-8">
-
+                                {{ $tagih->satker->opd }} - {{ $tagih->satker->sekolah }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3 col-md-4 label fw-bold">Total Kerugian</div>
-                            <div class="col-lg-9 col-md-8"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 label fw-bold">Total Kewajiban</div>
+                            <div class="col-lg-3 col-md-4 label fw-bold">Kecamatan</div>
                             <div class="col-lg-9 col-md-8">
-
+                                {{ $tagih->kecamatan->kecamatan }} - {{ $tagih->kecamatan->deskel }}
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label fw-bold">Tenggat Pembayaran</div>
+                            <div class="col-lg-9 col-md-8">
+                                {{ $tagih->deadline }}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-lg-6 row">
+                                <div class="col-lg-5 col-md-4 label fw-bold">Total Kerugian</div>
+                                <div class="col-lg-6 col-md-8">
+                                    <span>Nilai: Rp. {{ $tagih->total_kerugian }}
+                                    </span><br>
+                                    <span>Sisa: Rp. {{ $tagih->sisa_kerugian }}
+                                    </span><br>
+                                    <span>Tarik: Rp. {{ $tagih->bayar_kerugian }}
+                                </div>
+                            </div>
+                            <div class="col-lg-6 row">
+                                <div class="col-lg-6 col-md-4 label fw-bold">Total Kewajiban</div>
+                                <div class="col-lg-6 col-md-8">
+                                    <span>Nilai: Rp. {{ $tagih->total_kewajiban }}
+                                    </span><br>
+                                    <span>Sisa: Rp. {{ $tagih->sisa_kewajiban }}
+                                    </span><br>
+                                    <span>Tarik: Rp. {{ $tagih->bayar_kewajiban }}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -54,7 +80,7 @@
                                 <h5 class="card-title">Daftar Pembayaran</h5>
                             </div>
                             <div class="py-3 pe-2">
-                                <a href="{{ route('form.bayar') }}">
+                                <a href="{{ route('form.bayar', ['tagihan' => $tagih->slug]) }}">
                                     <button type="button" class="btn btn-warning rounded-pill">
                                         <strong><i class='bx bx-plus'></i> Tambah</strong>
                                     </button>
@@ -94,41 +120,64 @@
                             <thead>
                                 <tr>
                                     <th class="text-center" scope="col" style="max-width: 10%;">No</th>
-                                    <th class="text-center" scope="col" style="max-width: 20%;">Jumlah Pembayaran</th>
-                                    <th class="text-center" scope="col" style="max-width: 20%;">Sisa Pembayaran</th>
+                                    <th class="text-center" scope="col" style="max-width: 20%;">Jumlah Pembayaran
+                                        Kerugian</th>
+                                    <th class="text-center" scope="col" style="max-width: 20%;">Jumlah Pembayaran
+                                        kewajiban</th>
                                     <th class="text-center" scope="col" style="max-width: 20%;">Tanggal Pembayaran</th>
+                                    <th class="text-center" scope="col" style="max-width: 20%;">Status</th>
                                     <th class="text-center" scope="col" style="max-width: 10%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @forelse ($pembayaran as $bayar)
+                                    <tr>
+                                        <td class="text-center fw-bold">{{ $loop->iteration }}</td>
+                                        <td>Rp. {{ $bayar->bayar_rugi }}</td>
+                                        <td>RP. {{ $bayar->bayar_wajib }}</td>
+                                        <td class="text-center">{{ $bayar->tanggal_bayar }}</td>
+                                        <td class="text-center"><span @class([
+                                            'badge',
+                                            'bg-success' => $bayar->status === 'Pembayaran Sukses',
+                                            'bg-warning' => $bayar->status === 'Menunggu Konfirmasi',
+                                            'bg-danger' => $bayar->status === 'Pembayaran Ditolak',
+                                            'bg-secondary' => !in_array($bayar->status, [
+                                                'Pembayaran Sukses',
+                                                'Menunggu Konfirmasi',
+                                                'Pembayaran Ditolak',
+                                            ]),
+                                        ])>
+                                                {{ $bayar->status ?? '-' }}
+                                            </span></td>
+                                        <td class="text-center">
+                                            <div class="row text-center">
+                                                <div class="demo-inline-spacing">
+                                                    <a href="{{ route('edit.bayar', ['tagihan' => $tagih->slug, 'bayaranslug' => $bayar->slug]) }}"
+                                                        class="btn btn-outline-primary" data-toggle="tooltip"
+                                                        title="Perbarui Data">
+                                                        <span class="tf-icons bx bx-edit-alt me-1"></span>
+                                                    </a>
 
-                                <tr>
-                                    <td class="text-center"></td>
-                                    <td><a href=""></a></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-center">
-                                        <div class="row text-center">
-                                            <div class="demo-inline-spacing">
-                                                <a href="" class="btn btn-outline-primary" data-toggle="tooltip"
-                                                    title="Perbarui Data">
-                                                    <span class="tf-icons bx bx-edit-alt me-1"></span>
-                                                </a>
-
-                                                <form action="" method="POST" class="d-inline">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-outline-danger"
-                                                        data-toggle="tooltip" title="Hapus Data"
-                                                        onclick="return confirm('Yakin Ingin Menghapus Data?')">
-                                                        <span class="tf-icons bx bx-trash me-1"></span>
-                                                    </button>
-                                                </form>
+                                                    <form
+                                                        action="{{ route('destroy.bayar', ['tagihan' => $tagih->slug, 'bayaranslug' => $bayar->slug]) }}"
+                                                        method="POST" class="d-inline">
+                                                        @method('DELETE')
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-outline-danger"
+                                                            data-toggle="tooltip" title="Hapus Data"
+                                                            onclick="return confirm('Yakin Ingin Menghapus Data?')">
+                                                            <span class="tf-icons bx bx-trash me-1"></span>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center">Tidak Ada Riwayat Pembayaran</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                         <!-- End Table with stripped rows -->

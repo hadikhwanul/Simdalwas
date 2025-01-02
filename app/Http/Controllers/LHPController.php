@@ -20,32 +20,61 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TemuanExport;
 
 class LHPController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $lhps = Draft::with([
-            'temuans.penyebabs',
-            'temuans.rekomendasis.tindaks'
-        ])
-            ->where('status', 'LHP Terbit')  // Filter by status 'LHP Terbit'
-            ->latest()
-            ->paginate(10);
+        // Ambil user yang sedang login
+        $user = auth()->user();
+        $userRole = $user->jobdesks->role; // Asumsi role disimpan di 'role'
+        $userKlmpk = $user->kelompok; // Asumsi kelompok disimpan di 'kelompok'
+
+        // Daftar role yang menampilkan semua laporan
+        $excludedRoles = ['SEKRETARIS', 'INSPEKTUR', 'Admin', 'SuperAdmin'];
+
+        // Mulai query draft
+        $query = Draft::query()->where('status', 'LHP Terbit');
+
+        // Filter berdasarkan role
+        if (!in_array($userRole, $excludedRoles)) {
+            // Filter berdasarkan kelompok hanya jika role tidak termasuk dalam excludedRoles
+            if (!empty($userKlmpk)) {
+                $query->where('irban', $userKlmpk);
+            }
+        }
+
+        // Apply filters dari request
+        if ($request->filled('bidang')) {
+            $query->where('bidang', $request->bidang);
+        }
+
+        if ($request->filled('sifat')) {
+            $query->where('sifat', $request->sifat);
+        }
+
+        if ($request->filled('tanggal_lhp')) {
+            $query->whereDate('tanggal_lhp', $request->tanggal_lhp);
+        }
+
+        if ($request->has('induk_id') && $request->induk_id != '') {
+            $query->where('induk_id', $request->induk_id);
+        }
+
+        // Eksekusi query untuk mendapatkan hasil
+        $drafts = $query->latest()->get();
 
         return view('LHP.index', [
             "judul" => "LHP",
-            "lhps" => $lhps,
+            "lhps" => $drafts,
+            'induks' => Induk::all(),
         ]);
     }
-
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Draft $draft)
     {
         $draft->load('histories');
@@ -160,7 +189,9 @@ class LHPController extends Controller
         $draft = Draft::where('slug', $slug)->firstOrFail();
 
         // Ambil semua temuans yang terkait dengan draft ini
-        $temuans = Temuan::where('lhp_id', $draft->id)->get();
+        $temuans = Temuan::where('lhp_id', $draft->id)
+            ->with(['penyebabs.pokokPenyebab', 'rekomendasis.pokokRekomendasi', 'pokokTemuan'])
+            ->get();
 
         // Ambil semua pokok temuan dengan kondisi yang diminta
         $pokokTemuan = PokokTemuan::where('no_subpokok', 0)
@@ -175,6 +206,17 @@ class LHPController extends Controller
         ]);
     }
 
+    public function exportExcel($slug)
+    {
+        // Ambil data draft berdasarkan slug
+        $draft = Draft::where('slug', $slug)->firstOrFail();
+
+        // Ambil semua temuans yang terkait dengan draft ini
+        $temuans = Temuan::where('lhp_id', $draft->id)->get();
+
+        // Ekspor data temuan ke Excel
+        return Excel::download(new TemuanExport($temuans, $draft), 'temuan_lhp_' . $draft->slug . '.xlsx');
+    }
 
     public function tambahtemuan($slug)
     {
@@ -275,12 +317,12 @@ class LHPController extends Controller
             'judul' => 'Edit Temuan',
             'lhp' => $draft,
             'temuan' => $temuan,
-            'pokok_temuan' => PokokTemuan::pokok()->get(),
-            'sub_pokok_temuan' => PokokTemuan::subPokok()->get(),
-            'pokok_penyebab' => PokokPenyebab::pokok()->get(),
-            'sub_pokok_penyebab' => PokokPenyebab::subpokok()->get(),
-            'pokok_rekomendasi' => PokokRekomendasi::pokok()->get(),
-            'sub_pokok_rekomendasi' => PokokRekomendasi::subpokok()->get(),
+            'pokok_temuan' => PokokTemuan::getDistinctPokokTemuan(),
+            'sub_pokok_temuan' => PokokTemuan::getDistinctSubPokokTemuan(),
+            'pokok_penyebab' => PokokPenyebab::getDistinctPokokPenyebab(),
+            'sub_pokok_penyebab' => PokokPenyebab::getDistinctSubPokokPenyebab(),
+            'pokok_rekomendasi' => PokokRekomendasi::getDistinctPokokRekomendasi(),
+            'sub_pokok_rekomendasi' => PokokRekomendasi::getDistinctSubPokokRekomendasi(),
         ]);
     }
 

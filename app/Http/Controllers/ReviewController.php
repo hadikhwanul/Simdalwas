@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Draft;
+use App\Models\Induk;
 use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -10,14 +11,75 @@ use Illuminate\Support\Facades\Log;
 
 class ReviewController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $review = Draft::latest()->paginate(10)->withQueryString();
+        // Ambil user yang sedang login
+        $user = auth()->user();
+
+        // Start a query to get all drafts
+        $query = Draft::query();
+
+        // Filter berdasarkan role
+        $roleStatusMapping = [
+            'DALNIS' => ['Review DALNIS', 'Revisi DALNIS', 'Revisi IRBAN', 'Draft LHP'],
+            'IRBAN' => ['Review IRBAN', 'Revisi Sekretaris'],
+            'SEKRETARIS' => ['Review Sekretaris', 'Review Inspektur'],
+            'INSPEKTUR' => ['LHP Terbit', 'Revisi Inspektur'],
+            'SuperAdmin' => [
+                'Review DALNIS',
+                'Review IRBAN',
+                'Review Sekretaris',
+                'Review Inspektur',
+                'LHP Terbit',
+                'Revisi DALNIS',
+                'Revisi IRBAN',
+                'Revisi Sekretaris',
+                'Revisi Inspektur',
+            ],
+        ];
+
+        // Ambil status yang sesuai dengan role user
+        $statuses = $roleStatusMapping[$user->jobdesks->role] ?? [];
+        // Filter berdasarkan status yang diizinkan untuk role tersebut
+        if (!empty($statuses)) {
+            $query->whereIn('status', $statuses);
+        }
+        // Filter berdasarkan status yang diizinkan untuk role tersebut
+        if (!empty($statuses)) {
+            $query->whereIn('status', $statuses);
+        }
+
+        // Apply filters from the request
+        if ($request->filled('bidang')) {
+            $query->where('bidang', $request->bidang);
+        }
+
+        if ($request->filled('sifat')) {
+            $query->where('sifat', $request->sifat);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('tanggal_lhp')) {
+            $query->whereDate('tanggal_lhp', $request->tanggal_lhp);
+        }
+
+        if ($request->has('induk_id') && $request->induk_id != '') {
+            $query->where('induk_id', $request->induk_id);
+        }
+
+        // Get the filtered drafts
+        $drafts = $query->latest()->get();
+
         return view('Review.index', [
             "judul" => "Review Draft LHP",
-            "review" => $review,
+            "review" => $drafts,
+            'induks' => Induk::all(),
         ]);
     }
+
 
     public function show($slug)
     {

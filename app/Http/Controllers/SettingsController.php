@@ -71,8 +71,8 @@ class SettingsController extends Controller
             'NIP' => 'nullable|string|max:255',
             'no_hp' => 'nullable|string|max:20',
             'no_wa' => 'nullable|string|max:20',
-            'kelompok' => 'required|string',
-            'jobdesk_id' => 'required|exists:jobdesks,id',
+            'kelompok' => 'nullable|string',
+            'jobdesk_id' => 'nullable|exists:jobdesks,id',
         ]);
 
         try {

@@ -37,50 +37,22 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-4 label fw-bold">Pokok Temuan</div>
                             <div class="col-lg-9 col-md-8">
-                                {{ $rekomendasi->temuan->pokokTemuan->no_pokok . '. ' . $rekomendasi->temuan->pokokTemuan->pokok_tindak }}
+                                {{ $rekomendasi->temuan->pokokTemuan->no_pokok ?? '-' }}.
+                                {{ $rekomendasi->temuan->pokokTemuan->pokok_temuan ?? '-' }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-3 col-md-4 label fw-bold">Sub Pokok Temuan</div>
                             <div class="col-lg-9 col-md-8">
-                                {{ $rekomendasi->temuan->pokokTemuan->no_subpokok . '. ' . $rekomendasi->temuan->pokokTemuan->sub_pokok_tindak }}
+                                {{ $rekomendasi->temuan->pokokTemuan->no_subpokok ?? '-' }}.
+                                {{ $rekomendasi->temuan->pokokTemuan->sub_pokok_temuan ?? '-' }}
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="card">
-                    <span class="alert alert-success  alert-dismissible fade show"><strong>Penyebab</strong></span>
-                    <div class="card-body pt-3">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 label fw-bold">Penyebab</div>
-                            <div class="col-lg-9 col-md-8">
-                                {!! $rekomendasi->temuan->first()?->penyebabs->first()?->penyebab ?? 'Data not available' !!}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 label fw-bold">Pokok Penyebab</div>
-                            <div class="col-lg-9 col-md-8">
-                                {{ $rekomendasi->temuan->first()?->penyebabs->first()?->pokokPenyebab?->no_pokok .
-                                    '. ' .
-                                    $rekomendasi->temuan->first()?->penyebabs->first()?->pokokPenyebab?->pokok_penyebab ??
-                                    'Data not available' }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 label fw-bold">Sub Pokok Penyebab</div>
-                            <div class="col-lg-9 col-md-8">
-                                {{ $rekomendasi->temuan->first()?->penyebabs->first()?->pokokPenyebab?->no_subpokok .
-                                    '. ' .
-                                    $rekomendasi->temuan->first()?->penyebabs->first()?->pokokPenyebab?->sub_pokok_penyebab ??
-                                    'Data not available' }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12">
                 <div class="card">
                     <span class="alert alert-primary  alert-dismissible fade show"><strong>Rekomendasi</strong></span>
                     <div class="card-body pt-3">
@@ -166,7 +138,7 @@
                                     <option value="TPTD" {{ old('status') == 'TPTD' ? 'selected' : '' }}>
                                         TPTD - Temuan Pemeriksaan Tidak Dapat Dilanjuti</option>
                                 </select>
-                                @error('no_lhp')
+                                @error('status')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Draft;
+use App\Models\Induk;
+use App\Models\Auditor;
+use App\Models\History;
+use App\Models\Departemen;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Auditor;
-use App\Models\Departemen;
-use App\Models\History;
-use App\Models\Induk;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class DraftController extends Controller
@@ -17,14 +18,53 @@ class DraftController extends Controller
     /**
      * Display a listing of the drafts.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $drafts = Draft::latest()->paginate(10)->withQueryString();
+        // Ambil user yang sedang login
+        $user = auth()->user();
+
+        // Start a query to get all drafts
+        $query = Draft::query();
+
+
+        // Filter tambahan berdasarkan kelompok kecuali SuperAdmin
+        if ($user->jobdesks->role !== 'SuperAdmin' && !empty($user->kelompok)) {
+            $query->where('irban', $user->kelompok);
+        }
+
+        // Apply filters from the request
+        if ($request->filled('bidang')) {
+            $query->where('bidang', $request->bidang);
+        }
+
+        if ($request->filled('sifat')) {
+            $query->where('sifat', $request->sifat);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('tanggal_lhp')) {
+            $query->whereDate('tanggal_lhp', $request->tanggal_lhp);
+        }
+
+        if ($request->has('induk_id') && $request->induk_id != '') {
+            $query->where('induk_id', $request->induk_id);
+        }
+
+        // Get the filtered drafts
+        $drafts = $query->latest()->get();
+
         return view('DraftLHP.index', [
-            'judul' => 'Draft LHP',
-            'drafts' => $drafts,
+            "judul" => "Draft LHP",
+            "drafts" => $drafts,
+            'induks' => Induk::all(),
         ]);
     }
+
+
+
 
     /**
      * Show the form for creating a new draft.

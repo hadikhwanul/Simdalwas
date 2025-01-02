@@ -78,12 +78,28 @@
                             <div>
                                 <h5 class="card-title">Data Temuan LHP</h5>
                             </div>
-                            <div class="py-3 pe-2">
-                                <a href="{{ route('tambah.temuan', $lhp->slug) }}">
-                                    <button type="button" class="btn btn-warning rounded-pill">
-                                        <strong><i class='bx bx-plus'></i> Tambah</strong>
-                                    </button>
-                                </a>
+                            <div class="d-flex justify-content-end">
+                                {{-- <div class="py-3 pe-2">
+                                    <a href="{{ route('excel.temuan', $lhp->slug) }}">
+                                        <button type="button" class="btn btn-outline-success ">
+                                            <strong><i class='bi bi-file-earmark-spreadsheet'></i> Export Excel</strong>
+                                        </button>
+                                    </a>
+                                </div>
+                                <div class="py-3 pe-2">
+                                    <a href="">
+                                        <button type="button" class="btn btn-outline-danger ">
+                                            <strong><i class='bi bi-file-earmark-pdf'></i> Export PDF</strong>
+                                        </button>
+                                    </a>
+                                </div> --}}
+                                <div class="py-3 pe-2">
+                                    <a href="{{ route('tambah.temuan', $lhp->slug) }}">
+                                        <button type="button" class="btn btn-warning rounded-pill">
+                                            <strong><i class='bx bx-plus'></i> Tambah</strong>
+                                        </button>
+                                    </a>
+                                </div>
                             </div>
                         </div>
 

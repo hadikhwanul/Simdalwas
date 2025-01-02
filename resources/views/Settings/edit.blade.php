@@ -164,7 +164,7 @@
                                     <div class="row mb-3">
                                         <label for="group" class="col-md-4 col-lg-3 col-form-label">Kelompok</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <select id="inputKelompok" class="form-select" name="kelompok" required>
+                                            <select id="inputKelompok" class="form-select" name="kelompok" disabled>
                                                 <option class="text-center" disabled>Pilih Kelompok</option>
                                                 <option value="Admin"
                                                     {{ old('kelompok', auth()->user()->kelompok) == 'Admin' ? 'selected' : '' }}>
@@ -212,7 +212,7 @@
                                     <div class="row mb-3">
                                         <label for="jobdesk" class="col-md-4 col-lg-3 col-form-label">Role</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <select id="inputRole" class="form-select" name="jobdesk_id" required>
+                                            <select id="inputRole" class="form-select" name="jobdesk_id" disabled>
                                                 <option class="text-center" disabled selected>Pilih Role</option>
                                                 @forelse ($role as $rl)
                                                     <option value="{{ $rl->id }}"

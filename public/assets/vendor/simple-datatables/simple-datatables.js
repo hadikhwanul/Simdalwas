@@ -872,8 +872,8 @@
                     labels: {
                         placeholder: "Search...",
                         perPage: "{select} entries per page",
-                        noRows: "No entries found",
-                        noResults: "No results match your search query",
+                        noRows: "Tidak Ada Data",
+                        noResults: "Kata Kunci Tidak Ditemukan",
                         info: "Showing {start} to {end} of {rows} entries"
                     },
                     layout: {

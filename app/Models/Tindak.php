@@ -20,7 +20,6 @@ class Tindak extends Model
         'tagihan_id',
         'laporan_tl',
     ];
-
     public function sluggable(): array
     {
         return [
@@ -39,12 +38,12 @@ class Tindak extends Model
     // Define the relationship to Tagihan (many-to-one)
     public function tagihans()
     {
-        return $this->belongsTo(Tagihan::class);
+        return $this->hasMany(Tagihan::class);
     }
 
     // Define the relationship to Rekomendasi (one-to-many)
     public function rekomendasis()
     {
-        return $this->belongsTo(Rekomendasi::class);
+        return $this->belongsTo(Rekomendasi::class);  // Update to hasMany
     }
 }

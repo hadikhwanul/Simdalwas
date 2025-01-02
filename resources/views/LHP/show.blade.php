@@ -3,7 +3,7 @@
 @section('main')
     <div class="pagetitle d-flex justify-content-between">
         <div>
-            <h1>Draft LHP</h1>
+            <h1>{{ $judul }}</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>

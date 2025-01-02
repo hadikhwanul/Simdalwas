@@ -7,7 +7,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('draft-lhp.index') }}">{{ $judul }}</a></li>
-                <li class="breadcrumb-item active">Edit</li>
+                <li class="breadcrumb-item active">Edit {{ $judul }}</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -16,7 +16,7 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Form Edit</h5>
+                    <h5 class="card-title">Form Edit {{ $judul }}</h5>
 
                     <!-- Multi Columns Form -->
                     <form class="row g-3" action="{{ route('lhp.update', $lhp->slug) }}" method="POST"

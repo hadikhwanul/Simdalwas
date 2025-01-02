@@ -13,10 +13,27 @@ class LaporanController extends Controller
      */
     public function index()
     {
-        $drafts = Draft::latest()->paginate(10)->withQueryString();
+        $drafts = Draft::with([
+            'temuans.penyebabs',
+            'temuans.rekomendasis.tindaks'
+        ])
+            ->where('status', '!=', 'LHP Terbit')  // Filter by status 'LHP Terbit'
+            ->latest()
+            ->paginate(10);
+
+
+        $lhps = Draft::with([
+            'temuans.penyebabs',
+            'temuans.rekomendasis.tindaks'
+        ])
+            ->where('status', 'LHP Terbit')  // Filter by status 'LHP Terbit'
+            ->latest()
+            ->paginate(10);
+
         return view('Laporan.index', [
             'judul' => 'Laporan',
             'drafts' => $drafts,
+            'lhps' => $lhps
         ]);
     }
 

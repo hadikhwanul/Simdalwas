@@ -2,12 +2,11 @@
 
 @section('main')
     <div class="pagetitle">
-        <h1>Data Tables</h1>
+        <h1>{{ $judul }}</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item">Tables</li>
-                <li class="breadcrumb-item active">Data</li>
+                <li class="breadcrumb-item active">{{ $judul }}</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -19,76 +18,101 @@
                     <div class="card-body">
                         <div class="accordion accordion-flush" id="accordionFlushExample">
                             <div class="accordion-item">
-                                <h1 class="accordion-header card-title" id="flush-headingOne">
+                                <h2 class="accordion-header card-title" id="flush-headingOne">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#flush-collapseOne" aria-expanded="false"
                                         aria-controls="flush-collapseOne">
-                                        FIlter
+                                        Filter
                                     </button>
-                                </h1>
-                                <div id="flush-collapseOne" class="accordion-collapse collapse"
-                                    aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                    <!-- Default Card -->
-                                    <div class="row">
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
+                                </h2>
+                                <!-- Filter Section -->
+                                <form method="GET" action="{{ route('lhp.index') }}">
+                                    <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                        aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                        <div class="row">
+                                            <div class="col-lg-2 mb-3">
+                                                <p><strong>Bidang</strong></p>
+                                                <select id="filter-bidang" name="bidang" class="form-select">
+                                                    <option class="text-center" value="" selected>Pilih
+                                                        Bidang</option>
+                                                    <option value="Komprehensif"
+                                                        {{ request('bidang') == 'Komprehensif' ? 'selected' : '' }}>
+                                                        Komprehensif</option>
+                                                    <option value="Kebijakan"
+                                                        {{ request('bidang') == 'Kebijakan' ? 'selected' : '' }}>Kebijakan
+                                                    </option>
+                                                    <option value="Tupoksi"
+                                                        {{ request('bidang') == 'Tupoksi' ? 'selected' : '' }}>Tupoksi
+                                                    </option>
+                                                    <option value="Pengelolaan Aset Daerah"
+                                                        {{ request('bidang') == 'Pengelolaan Aset Daerah' ? 'selected' : '' }}>
+                                                        Pengelolaan Aset Daerah</option>
+                                                    <option value="Pengelolaan Keuangan"
+                                                        {{ request('bidang') == 'Pengelolaan Keuangan' ? 'selected' : '' }}>
+                                                        Pengelolaan Keuangan</option>
+                                                    <option value="Pengelolaan Pendapatan"
+                                                        {{ request('bidang') == 'Pengelolaan Pendapatan' ? 'selected' : '' }}>
+                                                        Pengelolaan Pendapatan</option>
+                                                    <option value="Pengelolaan Kepegawaian"
+                                                        {{ request('bidang') == 'Pengelolaan Kepegawaian' ? 'selected' : '' }}>
+                                                        Pengelolaan Kepegawaian</option>
+                                                    <option value="Pengelolaan Kekayaan"
+                                                        {{ request('bidang') == 'Pengelolaan Kekayaan' ? 'selected' : '' }}>
+                                                        Pengelolaan Kekayaan</option>
+                                                </select>
                                             </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
+                                            <div class="col-lg-2 mb-3">
+                                                <p><strong>Sifat</strong></p>
+                                                <select id="filter-sifat" name="sifat" class="form-select">
+                                                    <option class="text-center" value="" selected>Pilih Sifat
+                                                    </option>
+                                                    <option value="Reguler"
+                                                        {{ request('sifat') == 'Reguler' ? 'selected' : '' }}>Reguler
+                                                    </option>
+                                                    <option value="Khusus"
+                                                        {{ request('sifat') == 'Khusus' ? 'selected' : '' }}>Khusus
+                                                    </option>
+                                                    <option value="Kinerja"
+                                                        {{ request('sifat') == 'Kinerja' ? 'selected' : '' }}>Kinerja
+                                                    </option>
+                                                    <option value="Rahasia"
+                                                        {{ request('sifat') == 'Rahasia' ? 'selected' : '' }}>Rahasia
+                                                    </option>
+                                                    <option value="Terpadu"
+                                                        {{ request('sifat') == 'Terpadu' ? 'selected' : '' }}>Terpadu
+                                                    </option>
+                                                    <option value="Kasus"
+                                                        {{ request('sifat') == 'Kasus' ? 'selected' : '' }}>Kasus</option>
+                                                </select>
                                             </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
+                                            <div class="col-lg-2 mb-3">
+                                                <p><strong>Induk</strong></p>
+                                                <select id="filter-induk" name="induk_id"
+                                                    class="form-select @error('induk_id') is-invalid @enderror">
+                                                    <option class="text-center" value="" selected>Pilih Induk
+                                                    </option>
+                                                    @forelse ($induks as $induk)
+                                                        <option value="{{ $induk->id }}"
+                                                            {{ request('induk_id') == $induk->id ? 'selected' : '' }}>
+                                                            {{ Str::before($induk->induk ?? '', '-') }}
+                                                        </option>
+                                                    @empty
+                                                        <option value="" disabled>Tidak Ada Induk</option>
+                                                    @endforelse
+                                                </select>
                                             </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
+                                            <div class="col-lg-2 mb-3">
+                                                <p><strong>Tanggal LHP</strong></p>
+                                                <input type="date" class="form-control" name="tanggal_lhp"
+                                                    id="filter-tanggal_lhp" value="{{ request('tanggal_lhp') }}">
                                             </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
+                                            <div class="col-lg-12 mt-2">
+                                                <button type="submit" class="btn btn-primary">Filter</button>
                                             </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="col-lg-2">
-                                            <div>
-                                                <p><Strong>Default Card</Strong></p>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                        </div><!-- End Default Card -->
-                                        <div class="d-flex justify-content-end">
-                                            <button class="btn btn-primary">Filter</button>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
+
                             </div>
                         </div>
                         <div class="d-flex justify-content-between">
@@ -126,10 +150,9 @@
                             <thead>
                                 <tr>
                                     <th class="text-center" scope="col" style="max-width: 5%;">No</th>
-                                    <th class="text-center" scope="col" style="max-width: 20%;">Judul</th>
+                                    <th class="text-center" scope="col" style="max-width: 30%;">Judul</th>
                                     <th class="text-center" scope="col" style="max-width: 15%;">Tanggal</th>
-                                    <th class="text-center" scope="col" style="max-width: 15%;">No LHP</th>
-                                    <th class="text-center" scope="col" style="max-width: 20%;">Type</th>
+                                    <th class="text-center" scope="col" style="max-width: 25%;">Type</th>
                                     <th class="text-center" scope="col" style="max-width: 10%;">T</th>
                                     <th class="text-center" scope="col" style="max-width: 10%;">P</th>
                                     <th class="text-center" scope="col" style="max-width: 10%;">R</th>
@@ -141,10 +164,13 @@
                                 @forelse ($lhps as $lhp)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td><a href="{{ route('lhp.show', $lhp->slug) }}">{{ $lhp->judul }}</a>
+                                        <td><a href="{{ route('lhp.show', $lhp->slug) }}">{{ $lhp->judul }}</a><br><br>
+                                            <span>Induk
+                                                :</span>{{ Str::before($lhp->induk->induk ?? '', '-') }}
+                                            <br><br>No LHP : {{ $lhp->no_lhp }} <br><br>
+                                            <b>{{ $lhp->user }}</b><br>{{ $lhp->irban }}
                                         </td>
                                         <td>{{ $lhp->tanggal_lhp }}</td>
-                                        <td>{{ $lhp->no_lhp }}</td>
                                         <td><b>Bidang:</b> {{ $lhp->bidang }} <br><br> <b>Sifat:</b>
                                             {{ $lhp->sifat }}
                                         </td>

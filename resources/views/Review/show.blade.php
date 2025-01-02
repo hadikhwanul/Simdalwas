@@ -1,6 +1,9 @@
 @extends('layouts.main')
 
 @section('main')
+    @php
+        $userRole = auth()->user()->jobdesks->role;
+    @endphp
     <div class="pagetitle d-flex justify-content-between">
         <div>
             <h1>Review Draft LHP</h1>
@@ -97,153 +100,158 @@
                                     </div>
                                 </div>
                             </div><!-- End Overview -->
-                            {{-- review dalnis --}}
-                            <div class="col-lg-12 mt-3">
-                                <form action="{{ route('review.dalnis', $review->slug) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
+                            @if (str_contains('DALNIS|Admin|SuperAdmin', $userRole))
+                                {{-- review dalnis --}}
+                                <div class="col-lg-12 mt-3">
+                                    <form action="{{ route('review.dalnis', $review->slug) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
 
-                                    <!-- Alert Section -->
-                                    <div class="alert alert-primary alert-dismissible fade show">
-                                        <strong>Review DALNIS</strong>
-                                    </div>
-
-                                    <!-- Input for DALNIS Revision -->
-                                    <input id="dalnis" type="hidden" name="revisi_dalnis"
-                                        class="form-control @error('revisi_dalnis') is-invalid @enderror"
-                                        value="{{ old('revisi_dalnis', $review->revisi_dalnis ?? '') }}">
-                                    <trix-editor input="dalnis"></trix-editor>
-                                    <p>*Jika Ada Revisi Wajib diisi</p>
-                                    @error('revisi_dalnis')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
+                                        <!-- Alert Section -->
+                                        <div class="alert alert-primary alert-dismissible fade show">
+                                            <strong>Review DALNIS</strong>
                                         </div>
-                                    @enderror
 
-                                    <!-- Hidden Input for User -->
-                                    <input type="hidden" name="user" value="{{ auth()->user()->username }}">
+                                        <!-- Input for DALNIS Revision -->
+                                        <input id="dalnis" type="hidden" name="revisi_dalnis"
+                                            class="form-control @error('revisi_dalnis') is-invalid @enderror"
+                                            value="{{ old('revisi_dalnis', $review->revisi_dalnis ?? '') }}">
+                                        <trix-editor input="dalnis"></trix-editor>
+                                        <p>*Jika Ada Revisi Wajib diisi</p>
+                                        @error('revisi_dalnis')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
 
-                                    <!-- Action Buttons -->
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button type="submit" name="action" value="revisi"
-                                            class="btn btn-secondary">Revisi</button>&nbsp;
-                                        <button type="submit" name="action" value="lanjutkan"
-                                            class="btn btn-primary">Lanjutkan Ke IRBAN</button>
-                                    </div>
-                                </form>
-                            </div>
-                            {{-- !review dalnis --}}
+                                        <!-- Hidden Input for User -->
+                                        <input type="hidden" name="user" value="{{ auth()->user()->username }}">
 
-                            {{-- review irban --}}
-                            <div class="col-lg-12 mt-3">
-                                <form action="{{ route('review.irban', $review->slug) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <!-- Alert Section -->
-                                    <div class="alert alert-primary alert-dismissible fade show">
-                                        <strong>Review IRBAN</strong>
-                                    </div>
-
-                                    <!-- Input for DALNIS Revision -->
-                                    <input id="irban" type="hidden" name="revisi_irban"
-                                        class="form-control @error('revisi_irban') is-invalid @enderror"
-                                        value="{{ old('revisi_irban', $review->revisi_dalnis ?? '') }}">
-                                    <trix-editor input="irban"></trix-editor>
-                                    <p>*Jika Ada Revisi Wajib diisi</p>
-                                    @error('revisi_irban')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
+                                        <!-- Action Buttons -->
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button type="submit" name="action" value="revisi"
+                                                class="btn btn-secondary">Revisi</button>&nbsp;
+                                            <button type="submit" name="action" value="lanjutkan"
+                                                class="btn btn-primary">Lanjutkan Ke IRBAN</button>
                                         </div>
-                                    @enderror
+                                    </form>
+                                </div>
+                                {{-- !review dalnis --}}
+                            @endif
+                            @if (str_contains('IRBAN|Admin|SuperAdmin', $userRole))
+                                {{-- review irban --}}
+                                <div class="col-lg-12 mt-3">
+                                    <form action="{{ route('review.irban', $review->slug) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
 
-                                    <!-- Hidden Input for User -->
-                                    <input type="hidden" name="user" value="{{ auth()->user()->username }}">
-
-                                    <!-- Action Buttons -->
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button type="submit" name="action" value="revisi"
-                                            class="btn btn-secondary">Revisi</button>&nbsp;
-                                        <button type="submit" name="action" value="lanjutkan"
-                                            class="btn btn-primary">Lanjutkan Ke Sekretaris</button>
-                                    </div>
-                                </form>
-                            </div>
-                            {{-- !review irban --}}
-
-                            {{-- review sekretaris --}}
-                            <div class="col-lg-12 mt-3">
-                                <form action="{{ route('review.sekretaris', $review->slug) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <!-- Alert Section -->
-                                    <div class="alert alert-primary alert-dismissible fade show">
-                                        <strong>Review Sekretaris</strong>
-                                    </div>
-
-                                    <!-- Input for Sekretaris Revision -->
-                                    <input id="sekretaris" type="hidden" name="revisi_sekretaris"
-                                        class="form-control @error('revisi_sekretaris') is-invalid @enderror"
-                                        value="{{ old('revisi_sekretaris', $review->revisi_sekretaris ?? '') }}">
-                                    <trix-editor input="sekretaris"></trix-editor>
-                                    <p>*Jika Ada Revisi Wajib diisi</p>
-                                    @error('revisi_sekretaris')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
+                                        <!-- Alert Section -->
+                                        <div class="alert alert-primary alert-dismissible fade show">
+                                            <strong>Review IRBAN</strong>
                                         </div>
-                                    @enderror
 
-                                    <!-- Hidden Input for User -->
-                                    <input type="hidden" name="user" value="{{ auth()->user()->username }}">
+                                        <!-- Input for DALNIS Revision -->
+                                        <input id="irban" type="hidden" name="revisi_irban"
+                                            class="form-control @error('revisi_irban') is-invalid @enderror"
+                                            value="{{ old('revisi_irban', $review->revisi_dalnis ?? '') }}">
+                                        <trix-editor input="irban"></trix-editor>
+                                        <p>*Jika Ada Revisi Wajib diisi</p>
+                                        @error('revisi_irban')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
 
-                                    <!-- Action Buttons -->
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button type="submit" name="action" value="revisi"
-                                            class="btn btn-secondary">Revisi</button>&nbsp;
-                                        <button type="submit" name="action" value="lanjutkan"
-                                            class="btn btn-primary">Lanjutkan Ke Inspektur</button>
-                                    </div>
-                                </form>
-                            </div>
-                            {{-- !review sekretaris --}}
+                                        <!-- Hidden Input for User -->
+                                        <input type="hidden" name="user" value="{{ auth()->user()->username }}">
 
-                            {{-- review inspektur --}}
-                            <div class="col-lg-12 mt-3">
-                                <form action="{{ route('review.inspektur', $review->slug) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <!-- Alert Section -->
-                                    <div class="alert alert-primary alert-dismissible fade show">
-                                        <strong>Review Inspektur</strong>
-                                    </div>
-
-                                    <!-- Input for inspektur Revision -->
-                                    <input id="inspektur" type="hidden" name="revisi_inspektur"
-                                        class="form-control @error('revisi_inspektur') is-invalid @enderror"
-                                        value="{{ old('revisi_inspektur', $review->revisi_inspektur ?? '') }}">
-                                    <trix-editor input="inspektur"></trix-editor>
-                                    <p>*Jika Ada Revisi Wajib diisi</p>
-                                    @error('revisi_inspektur')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
+                                        <!-- Action Buttons -->
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button type="submit" name="action" value="revisi"
+                                                class="btn btn-secondary">Revisi</button>&nbsp;
+                                            <button type="submit" name="action" value="lanjutkan"
+                                                class="btn btn-primary">Lanjutkan Ke Sekretaris</button>
                                         </div>
-                                    @enderror
+                                    </form>
+                                </div>
+                                {{-- !review irban --}}
+                            @endif
+                            @if (str_contains('SEKRETARIS|Admin|SuperAdmin', $userRole))
+                                {{-- review sekretaris --}}
+                                <div class="col-lg-12 mt-3">
+                                    <form action="{{ route('review.sekretaris', $review->slug) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
 
-                                    <!-- Hidden Input for User -->
-                                    <input type="hidden" name="user" value="{{ auth()->user()->username }}">
+                                        <!-- Alert Section -->
+                                        <div class="alert alert-primary alert-dismissible fade show">
+                                            <strong>Review Sekretaris</strong>
+                                        </div>
 
-                                    <!-- Action Buttons -->
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button type="submit" name="action" value="revisi"
-                                            class="btn btn-secondary">Revisi</button>&nbsp;
-                                        <button type="submit" name="action" value="lanjutkan"
-                                            class="btn btn-primary">Terbitkan LHP</button>
-                                    </div>
-                                </form>
-                            </div>
-                            {{-- !review dalnis --}}
+                                        <!-- Input for Sekretaris Revision -->
+                                        <input id="sekretaris" type="hidden" name="revisi_sekretaris"
+                                            class="form-control @error('revisi_sekretaris') is-invalid @enderror"
+                                            value="{{ old('revisi_sekretaris', $review->revisi_sekretaris ?? '') }}">
+                                        <trix-editor input="sekretaris"></trix-editor>
+                                        <p>*Jika Ada Revisi Wajib diisi</p>
+                                        @error('revisi_sekretaris')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                        <!-- Hidden Input for User -->
+                                        <input type="hidden" name="user" value="{{ auth()->user()->username }}">
+
+                                        <!-- Action Buttons -->
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button type="submit" name="action" value="revisi"
+                                                class="btn btn-secondary">Revisi</button>&nbsp;
+                                            <button type="submit" name="action" value="lanjutkan"
+                                                class="btn btn-primary">Lanjutkan Ke Inspektur</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                {{-- !review sekretaris --}}
+                            @endif
+                            @if (str_contains('INSPEKTUR|Admin|SuperAdmin', $userRole))
+                                {{-- review inspektur --}}
+                                <div class="col-lg-12 mt-3">
+                                    <form action="{{ route('review.inspektur', $review->slug) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <!-- Alert Section -->
+                                        <div class="alert alert-primary alert-dismissible fade show">
+                                            <strong>Review Inspektur</strong>
+                                        </div>
+
+                                        <!-- Input for inspektur Revision -->
+                                        <input id="inspektur" type="hidden" name="revisi_inspektur"
+                                            class="form-control @error('revisi_inspektur') is-invalid @enderror"
+                                            value="{{ old('revisi_inspektur', $review->revisi_inspektur ?? '') }}">
+                                        <trix-editor input="inspektur"></trix-editor>
+                                        <p>*Jika Ada Revisi Wajib diisi</p>
+                                        @error('revisi_inspektur')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                        <!-- Hidden Input for User -->
+                                        <input type="hidden" name="user" value="{{ auth()->user()->username }}">
+
+                                        <!-- Action Buttons -->
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button type="submit" name="action" value="revisi"
+                                                class="btn btn-secondary">Revisi</button>&nbsp;
+                                            <button type="submit" name="action" value="lanjutkan"
+                                                class="btn btn-primary">Terbitkan LHP</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                {{-- !review dalnis --}}
+                            @endif
                         </div>
                     </div><!-- End Bordered Tabs -->
                 </div>

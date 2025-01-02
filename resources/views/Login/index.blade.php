@@ -49,8 +49,8 @@
                         <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
                             <div class="d-flex justify-content-center py-0">
-                                <a href="" class="logo d-flex align-items-center w-auto">
-                                    <img src="assets/img/Simdalwas.png" alt="Logo">
+                                <a href="/" class="logo d-flex align-items-center w-auto">
+                                    <img src="{{ URL::asset('assets/img/Simdalwas.png') }}" alt="Logo">
                                 </a>
                             </div><!-- End Logo -->
 

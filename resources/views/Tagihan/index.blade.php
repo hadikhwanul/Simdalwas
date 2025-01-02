@@ -53,40 +53,48 @@
                                 <tr>
                                     <th class="text-center" style="max-width: 10%;">No</th>
                                     <th class="text-center" style="max-width: 20%;">Penanggung Jawab</th>
-                                    <th class="text-center" style="max-width: 20%;">OPD & Satker</th>
-                                    <th class="text-center" style="max-width: 20%;">Kecamatan & Desa Kelurahan</th>
-                                    <th class="text-center" style="max-width: 20%;">Status</th>
-                                    <th class="text-center" style="max-width: 10%;">Kerugian</th>
-                                    <th class="text-center" style="max-width: 10%;">Kewajiban</th>
-                                    <th class="text-center" style="max-width: 10%;">Jumlah Pembayaran</th>
+                                    <th class="text-center" style="max-width: 20%;">OPD-Satker & Kecamatan-Desa/kelurahan
+                                    </th>
+                                    <th class="text-center" style="max-width: 15%;">Kerugian</th>
+                                    <th class="text-center" style="max-width: 15%;">Kewajiban</th>
                                     <th class="text-center" style="max-width: 10%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($users as $user)
+                                @forelse ($tagihan as $tagih)
                                     <tr>
-                                        <th scope="row">{{ $loop->iteration }}</th>
-                                        <td>
-                                            <a href="{{ route('penanggung-jawab.show', $user->username) }}">
-                                                {{ $user->nama }}
-                                            </a>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td>{{ $tagih->user->nama ?? '-' }}</td>
+                                        <td>{{ $tagih->satker->opd ?? '-' }} - {{ $tagih->satker->sekolah ?? '-' }}
+                                            <br><br>
+                                            {{ $tagih->kecamatan->kecamatan ?? '-' }} -
+                                            {{ $tagih->kecamatan->deskel ?? '-' }}
                                         </td>
-                                        <td>{{ $user->username }}</td>
-                                        <td>{{ $user->kelompok }}</td>
-                                        <td>{{ $user->jobdesks->role }}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>
+                                            <span>Nilai: Rp. {{ $tagih->total_kerugian }}
+                                            </span><br><br>
+                                            <span>Sisa: Rp. {{ $tagih->sisa_kerugian }}
+                                            </span><br><br>
+                                            <span>Tarik: Rp. {{ $tagih->bayar_kerugian }}
+                                        </td>
+                                        <td>
+                                            <span>Nilai: Rp. {{ $tagih->total_kewajiban }}
+                                            </span><br><br>
+                                            <span>Sisa: Rp. {{ $tagih->sisa_kewajiban }}
+                                            </span><br><br>
+                                            <span>Tarik: Rp. {{ $tagih->bayar_kewajiban }}
+                                        </td>
                                         <td>
                                             <div class="row text-center">
                                                 <div class="demo-inline-spacing">
-                                                    <a href="{{ route('penanggung-jawab.edit', $user->username) }}"
+                                                    <a href="{{ route('daftar.valid', ['tagihan' => $tagih->slug]) }}"
                                                         class="btn btn-outline-primary" data-toggle="tooltip"
                                                         title="Validasi Pengembalian Dana">
                                                         <span class="tf-icons bx bx-task me-1"></span>
                                                     </a>
-                                                    <a href="{{ route('daftar.bayar') }}" class="btn btn-outline-success"
-                                                        data-toggle="tooltip" title="Daftar Pembayaran">
+                                                    <a href="{{ route('daftar.bayar', ['tagihan' => $tagih->slug]) }}"
+                                                        class="btn btn-outline-success" data-toggle="tooltip"
+                                                        title="Daftar Pembayaran">
                                                         <span class="tf-icons bx bx-money-withdraw me-1"></span>
                                                     </a>
 
@@ -103,7 +111,7 @@
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-end mt-3">
-                            <span>{{ $users->onEachSide(1)->links() }} </span>
+                            <span>{{ $tagihan->onEachSide(1)->links() }} </span>
                         </div>
                         <!-- End Table with stripped rows -->
                     </div>

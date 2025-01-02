@@ -23,33 +23,7 @@
 
     <section class="section">
         <div class="row">
-            <div class="col-lg-6">
-                <div class="card ">
-                    <span class="alert alert-danger  alert-dismissible fade show"><strong>Details
-                            Rekomendasi</strong></span>
-                    <div class="card-body pt-3 ">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 label">Rekomendasi</div>
-                            <div class="col-lg-9 col-md-8">
-                                {!! $tindak->rekomendasis?->rekomendasi ?? 'Tidak ada rekomendasi' !!}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 label">Pokok Rekomendasi</div>
-                            <div class="col-lg-9 col-md-8">
-                                {{ $tindak->rekomendasis?->pokokRekomendasi?->no_pokok . '. ' . $tindak->rekomendasis?->pokokRekomendasi?->pokok_rekomendasi ?? 'Tidak ada pokok rekomendasi' }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 label">Sub Pokok Rekomendasi</div>
-                            <div class="col-lg-9 col-md-8">
-                                {{ $tindak->rekomendasis?->pokokRekomendasi?->no_subpokok . '. ' . $tindak->rekomendasis?->pokokRekomendasi?->sub_pokok_rekomendasi ?? 'Tidak ada sub pokok rekomendasi' }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="card">
                     <span class="alert alert-success  alert-dismissible fade show"><strong>Detail Tindak</strong></span>
                     <div class="card-body pt-3">
@@ -81,7 +55,7 @@
                     <div class="card-body">
                         <div class="pagetitle d-flex justify-content-between">
                             <div>
-                                <h5 class="card-title">Data Temuan LHP</h5>
+                                <h5 class="card-title">Data Tagihan dan Penanggung jawab</h5>
                             </div>
                             <div class="py-3 pe-2">
                                 <a href="{{ route('tambah.pj', $tindak->slug) }}">
@@ -127,38 +101,44 @@
                                     <th class="text-center" style="max-width: 20%;">Penanggung Jawab</th>
                                     <th class="text-center" style="max-width: 20%;">OPD & Satker</th>
                                     <th class="text-center" style="max-width: 20%;">Kecamatan & Desa Kelurahan</th>
-                                    <th class="text-center" style="max-width: 10%;">Kerugian</th>
-                                    <th class="text-center" style="max-width: 10%;">Kewajiban</th>
+                                    <th class="text-center" style="max-width: 15%;">Kerugian</th>
+                                    <th class="text-center" style="max-width: 15%;">Kewajiban</th>
                                     <th class="text-center" style="max-width: 10%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($tagihan ?? [] as $tagih)
+                                @forelse ($tagihan as $tagih)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>{{ $tagih->penanggung_jawab ?? '-' }}</td>
+                                        <td>{{ $tagih->user->nama ?? '-' }}</td>
                                         <td>{{ $tagih->satker->opd ?? '-' }} - {{ $tagih->satker->sekolah ?? '-' }}</td>
                                         <td>{{ $tagih->kecamatan->kecamatan ?? '-' }} -
                                             {{ $tagih->kecamatan->deskel ?? '-' }}</td>
-                                        <td>Rp. {{ number_format($tagih->kerugian, 2, ',', '.') }}</td>
-                                        <td>Rp. {{ number_format($tagih->kewajiban, 2, ',', '.') }}</td>
+                                        <td>
+                                            <span>Nilai: Rp. {{ $tagih->total_kerugian }}
+                                            </span><br><br>
+                                            <span>Sisa: Rp. {{ $tagih->sisa_kerugian }}
+                                            </span><br><br>
+                                            <span>Tarik: Rp. {{ $tagih->bayar_kerugian }}
+                                        </td>
+                                        <td>
+                                            <span>Nilai: Rp. {{ $tagih->total_kewajiban }}
+                                            </span><br><br>
+                                            <span>Sisa: Rp. {{ $tagih->sisa_kewajiban }}
+                                            </span><br><br>
+                                            <span>Tarik: Rp. {{ $tagih->bayar_kewajiban }}
+                                        </td>
                                         <td>
                                             <div class="row text-center">
                                                 <div class="demo-inline-spacing mb-1">
-                                                    @if ($tagih->tindaks?->first()?->tindak == null)
-                                                        <a href="{{ route('tambah.tindak', $tagih->slug) }}"
-                                                            class="btn btn-outline-warning">
-                                                            <span class="tf-icons bx bx-add-to-queue mx-auto"></span>
-                                                        </a>
-                                                    @endif
-                                                    <a href="" class="btn btn-outline-primary mb-1">
+                                                    <a href="{{ route('edit.pj', ['tindak' => $tagih->tindaks->first()?->slug ?? 'default-slug', 'tagihanSlug' => $tagih->slug]) }}"
+                                                        class="btn btn-outline-primary mb-1">
                                                         <span class="tf-icons bx bx-edit-alt mx-auto"></span>
                                                     </a>
-                                                    <a href="{{ route('daftar.pj', $tagih->tindaks?->first()?->slug ?? 'default-slug') }}"
-                                                        class="btn btn-outline-success mb-1">
-                                                        <span class="tf-icons bx bx-user-plus mx-auto"></span>
-                                                    </a>
-                                                    <form action="" method="POST" class="d-inline mb-1">
+
+                                                    <form
+                                                        action="{{ route('destroy.pj', ['tindak' => $tagih->tindaks->first()?->slug ?? 'default-slug', 'tagihanSlug' => $tagih->slug]) }}"
+                                                        method="POST" class="d-inline mb-1">
                                                         @method('DELETE')
                                                         @csrf
                                                         <button type="submit" class="btn btn-outline-danger"
@@ -166,6 +146,7 @@
                                                             <span class="tf-icons bx bx-trash mx-auto"></span>
                                                         </button>
                                                     </form>
+
                                                 </div>
                                             </div>
                                         </td>
@@ -177,6 +158,7 @@
                                 @endforelse
                             </tbody>
                         </table>
+
 
 
                         <!-- End Table with stripped rows -->

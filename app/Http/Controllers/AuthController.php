@@ -13,7 +13,7 @@ class AuthController extends Controller
      */
     public function index()
     {
-        return view('Login.index',[
+        return view('Login.index', [
             "judul" => "Login"
         ]);
 
@@ -36,7 +36,16 @@ class AuthController extends Controller
 
         // Melakukan upaya autentikasi pengguna
         if (Auth::attempt($validatedData)) {
-            // Autentikasi berhasil, arahkan pengguna ke halaman yang dimaksud
+            $request->session()->regenerate();
+
+            // Periksa role pengguna
+            $user = Auth::user();
+            if ($user->jobdesks->role === 'Penanggung Jawab') {
+                // Arahkan ke halaman pengembalian-dana jika role adalah Penanggung Jawab
+                return redirect()->intended('/pengembalian-dana');
+            }
+
+            // Arahkan ke halaman default jika role bukan Penanggung Jawab
             return redirect()->intended('/');
         } else {
             // Autentikasi gagal, kembalikan pengguna ke halaman sebelumnya dengan pesan kesalahan
